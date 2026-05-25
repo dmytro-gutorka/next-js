@@ -1,6 +1,0 @@
-.next
-build
-node_modules
-coverage
-package-lock.json
-pnpm-lock.yaml
