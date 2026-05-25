@@ -1,5 +1,7 @@
+import { ResetPasswordPage } from '@/features/auth/ui/reset-password-page';
+
 function ResetPassword() {
-    return <div>ResetPassword</div>
+    return <ResetPasswordPage />;
 }
 
-export default ResetPassword
+export default ResetPassword;

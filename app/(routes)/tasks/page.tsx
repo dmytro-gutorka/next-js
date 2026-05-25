@@ -1,5 +1,7 @@
-function TasksPage() {
-    return <div>TasksPage</div>
+import { TasksPage } from '@/features/tasks/ui/tasks-page';
+
+function TasksRoutePage() {
+    return <TasksPage />;
 }
 
-export default TasksPage
+export default TasksRoutePage;

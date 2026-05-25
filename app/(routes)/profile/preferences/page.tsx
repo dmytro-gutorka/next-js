@@ -1,5 +1,7 @@
-function ProfilePreferencesPage() {
-    return <div>ProfilePreferencesPage</div>
+import { ProfilePreferencesPage } from '@/features/profile/index.ui';
+
+function ProfilePreferencesRoutePage() {
+    return <ProfilePreferencesPage />;
 }
 
-export default ProfilePreferencesPage
+export default ProfilePreferencesRoutePage;

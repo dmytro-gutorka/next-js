@@ -1,5 +1,7 @@
-function Registration() {
-    return <div>Registration</div>
+import { RegistrationPage } from '@/features/auth/ui/registration-page';
+
+function RegistrationRoutePage() {
+    return <RegistrationPage />;
 }
 
-export default Registration
+export default RegistrationRoutePage;

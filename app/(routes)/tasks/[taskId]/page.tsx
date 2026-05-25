@@ -1,5 +1,13 @@
-function TaskDetailsPage() {
-    return <div>TaskDetailsPage</div>
+import { TaskDetailsPage } from '@/features/tasks/ui/task-details-page';
+
+interface TaskDetailsRoutePageProps {
+    params: Promise<{ taskId: string }>;
 }
 
-export default TaskDetailsPage
+async function TaskDetailsRoutePage({ params }: TaskDetailsRoutePageProps) {
+    const { taskId } = await params;
+
+    return <TaskDetailsPage taskId={taskId} />;
+}
+
+export default TaskDetailsRoutePage;

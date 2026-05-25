@@ -1,5 +1,7 @@
-function ProfileDetailsPage() {
-    return <div>ProfileDetailsPage</div>
+import { ProfileDetailsPage } from '@/features/profile/index.ui';
+
+function ProfileDetailsRoutePage() {
+    return <ProfileDetailsPage />;
 }
 
-export default ProfileDetailsPage
+export default ProfileDetailsRoutePage;

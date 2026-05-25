@@ -1,7 +1,12 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react';
+import { ProfileLayout } from '@/features/profile/index.ui';
 
-function ProfileLayout({ children }: { children: ReactNode }) {
-    return <div>{children}</div>
+interface ProfileRouteLayoutProps {
+    children: ReactNode;
 }
 
-export default ProfileLayout
+function ProfileRouteLayout({ children }: ProfileRouteLayoutProps) {
+    return <ProfileLayout>{children}</ProfileLayout>;
+}
+
+export default ProfileRouteLayout;
