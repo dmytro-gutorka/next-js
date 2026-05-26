@@ -1,7 +1,10 @@
-import { ResetPasswordPage } from '@/features/auth/ui/reset-password-page';
+import { ResetPasswordPage } from '@/features/auth/index.ui';
+import { redirectIfAuthenticated } from '@/features/auth/index.server';
 
-function ResetPassword() {
+async function ResetPasswordRoutePage() {
+    await redirectIfAuthenticated();
+
     return <ResetPasswordPage />;
 }
 
-export default ResetPassword;
+export default ResetPasswordRoutePage;

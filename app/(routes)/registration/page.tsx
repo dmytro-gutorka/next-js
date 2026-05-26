@@ -1,6 +1,9 @@
-import { RegistrationPage } from '@/features/auth/ui/registration-page';
+import { RegistrationPage } from '@/features/auth/index.ui';
+import { redirectIfAuthenticated } from '@/features/auth/index.server';
 
-function RegistrationRoutePage() {
+async function RegistrationRoutePage() {
+    await redirectIfAuthenticated();
+
     return <RegistrationPage />;
 }
 

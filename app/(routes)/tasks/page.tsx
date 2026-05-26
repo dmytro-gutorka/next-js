@@ -1,6 +1,9 @@
-import { TasksPage } from '@/features/tasks/ui/tasks-page';
+import { TasksPage } from '@/features/tasks/index.ui';
+import { requireAuth } from '@/features/auth/index.server';
 
-function TasksRoutePage() {
+async function TasksRoutePage() {
+    await requireAuth();
+
     return <TasksPage />;
 }
 
