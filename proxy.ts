@@ -18,6 +18,8 @@ export async function proxy(request: NextRequest) {
     );
     const isPublicOnlyRoute = publicOnlyRoutes.includes(pathname);
 
+    if (pathname === '/') return NextResponse.redirect(new URL(AppRoutes.tasks, request.url));
+
     if (!isProtectedRoute && !isPublicOnlyRoute) return NextResponse.next();
 
     if (accessToken) {
