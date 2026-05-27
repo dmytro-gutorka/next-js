@@ -1,9 +1,3 @@
-import { redirect } from 'next/navigation';
-
-import { AppRoutes } from '@/shared/config/routes';
-
-function ProfileRoutePage() {
-    redirect(AppRoutes.profileDetails);
-}
+function ProfileRoutePage() {}
 
 export default ProfileRoutePage;

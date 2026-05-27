@@ -1,9 +1,6 @@
-import { LoginPage } from '@/features/auth/index.ui';
-import { redirectIfAuthenticated } from '@/features/auth/index.server';
+import { LoginPage } from 'features/auth/ui/login-page';
 
 async function LoginRoutePage() {
-    await redirectIfAuthenticated();
-
     return <LoginPage />;
 }
 

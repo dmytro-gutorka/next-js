@@ -1,4 +1,6 @@
-export function ResetPasswordPage() {
+'use server';
+
+export async function ResetPasswordPage() {
     return (
         <main>
             <h1>Reset Password</h1>

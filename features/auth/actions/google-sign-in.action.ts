@@ -1,17 +1,16 @@
 'use server';
 
+import type { AuthActionState } from '../model/auth.types';
 import { redirect } from 'next/navigation';
-import { AppRoutes } from '@/shared/config/routes';
-
-import { SignInGoogleSchema } from '../../model/auth.schemas';
-import type { AuthActionState } from '../../model/auth.types';
-import { signInGoogle } from '../auth-api';
-import { setSessionCookies } from '../session-cookies';
+import { SignInGoogleSchema } from '../model/auth.schemas';
+import { signInGoogle } from '../server/auth-api';
+import { setSessionCookies } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
     getStringFormValue,
 } from './action-state';
+import { AppRoutes } from 'shared/config/app-routes';
 
 export async function googleSignInAction(
     _previousState: AuthActionState,

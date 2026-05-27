@@ -1,8 +1,8 @@
 'use server';
 
-import { ConfirmPasswordResetSchema } from '../../model/auth.schemas';
-import type { AuthActionState } from '../../model/auth.types';
-import { confirmPasswordReset } from '../auth-api';
+import { ConfirmPasswordResetSchema } from '../model/auth.schemas';
+import type { AuthActionState } from '../model/auth.types';
+import { confirmPasswordReset } from '../server/auth-api';
 import {
     createErrorActionState,
     createValidationActionState,

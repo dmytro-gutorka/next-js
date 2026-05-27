@@ -1,7 +1,8 @@
-import { isBackendApiError } from '@/shared/api/backend-api-error';
+import 'server-only';
 
 import { getCurrentUser as getCurrentUserFromBackend } from './auth-api';
 import { getAccessTokenCookie } from './session-cookies';
+import { getServerHttpErrorStatus } from '@/shared/server/api/http-error.helpers';
 
 export async function getCurrentUser() {
     const accessToken = await getAccessTokenCookie();
@@ -11,7 +12,7 @@ export async function getCurrentUser() {
     try {
         return await getCurrentUserFromBackend(accessToken);
     } catch (error) {
-        if (isBackendApiError(error) && error.statusCode === 401) return null;
+        if (getServerHttpErrorStatus(error) === 401) return null;
 
         throw error;
     }

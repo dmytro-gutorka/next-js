@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-import { AppRoutes } from '@/shared/config/routes';
+import { AppRoutes } from 'shared/config/app-routes';
 
 interface ProfileLayoutProps {
     children: ReactNode;
 }
 
-export function ProfileLayout({ children }: ProfileLayoutProps) {
+export async function ProfileLayout({ children }: ProfileLayoutProps) {
     return (
         <main>
             <h1>Profile</h1>

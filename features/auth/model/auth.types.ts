@@ -6,14 +6,8 @@ export type AuthActionState = {
     fieldErrors?: Record<string, string[]>;
 };
 
-export type AuthTokensResult = {
-    accessToken: string;
-    refreshToken: Nullable<string>;
-};
-
 export type SessionTokens = {
     accessToken: string;
-    refreshToken?: Nullable<string>;
 };
 
 export type TokenResponse = {

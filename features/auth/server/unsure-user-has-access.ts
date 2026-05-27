@@ -1,10 +1,10 @@
+import 'server-only';
+
 import { redirect } from 'next/navigation';
-
-import { AppRoutes } from '@/shared/config/routes';
-
+import { AppRoutes } from 'shared/config/app-routes';
 import { getCurrentUser } from './get-current-user';
 
-export async function requireAuth() {
+export async function unsureUserHasAccess() {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) redirect(AppRoutes.login);

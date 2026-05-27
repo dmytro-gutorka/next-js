@@ -1,4 +1,4 @@
-import { TaskDetailsPage } from '@/features/tasks/index.ui';
+import { TaskDetailsPage } from 'features/tasks/ui/task-details-page';
 
 interface TaskDetailsRoutePageProps {
     params: Promise<{ taskId: string }>;

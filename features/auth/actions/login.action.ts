@@ -2,23 +2,23 @@
 
 import { redirect } from 'next/navigation';
 
-import { AppRoutes } from '@/shared/config/routes';
+import { AppRoutes } from 'shared/config/app-routes';
 
-import { SignUpLocalSchema } from '../../model/auth.schemas';
-import type { AuthActionState } from '../../model/auth.types';
-import { signUpLocal } from '../auth-api';
-import { setSessionCookies } from '../session-cookies';
+import { SignInLocalSchema } from '../model/auth.schemas';
+import type { AuthActionState } from '../model/auth.types';
+import { signInLocal } from '../server/auth-api';
+import { setSessionCookies } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
     getStringFormValue,
 } from './action-state';
 
-export async function registerAction(
+export async function loginAction(
     _previousState: AuthActionState,
     formData: FormData,
 ): Promise<AuthActionState> {
-    const payload = SignUpLocalSchema.safeParse({
+    const payload = SignInLocalSchema.safeParse({
         email: getStringFormValue(formData, 'email'),
         password: getStringFormValue(formData, 'password'),
     });
@@ -26,7 +26,7 @@ export async function registerAction(
     if (!payload.success) return createValidationActionState(payload);
 
     try {
-        const tokens = await signUpLocal(payload.data);
+        const tokens = await signInLocal(payload.data);
         await setSessionCookies(tokens);
     } catch (error) {
         return createErrorActionState(error);

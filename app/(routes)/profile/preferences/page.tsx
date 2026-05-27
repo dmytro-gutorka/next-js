@@ -1,4 +1,4 @@
-import { ProfilePreferencesPage } from '@/features/profile/index.ui';
+import { ProfilePreferencesPage } from 'features/profile/ui/profile-preferences-page';
 
 function ProfilePreferencesRoutePage() {
     return <ProfilePreferencesPage />;

@@ -1,4 +1,4 @@
-import { ProfileDetailsPage } from '@/features/profile/index.ui';
+import { ProfileDetailsPage } from 'features/profile/ui/profile-details-page';
 
 function ProfileDetailsRoutePage() {
     return <ProfileDetailsPage />;

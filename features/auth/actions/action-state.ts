@@ -1,7 +1,7 @@
-import { isBackendApiError } from '@/shared/api/backend-api-error';
-import type { AuthActionState } from '../../model/auth.types';
+import type { AuthActionState } from '../model/auth.types';
 import type { ZodSafeParseError } from 'zod';
 import { z } from 'zod';
+import { getServerHttpErrorMessage } from '@/shared/server/api/http-error.helpers';
 
 export function createValidationActionState(payload: ZodSafeParseError<unknown>): AuthActionState {
     const { fieldErrors } = z.flattenError(payload.error);
@@ -14,16 +14,9 @@ export function createValidationActionState(payload: ZodSafeParseError<unknown>)
 }
 
 export function createErrorActionState(error: unknown): AuthActionState {
-    if (isBackendApiError(error)) {
-        return {
-            success: false,
-            message: error.message,
-        };
-    }
-
     return {
         success: false,
-        message: 'Unexpected error occurred.',
+        message: getServerHttpErrorMessage(error),
     };
 }
 

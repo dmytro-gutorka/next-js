@@ -1,4 +1,4 @@
-export function ProfilePreferencesPage() {
+export async function ProfilePreferencesPage() {
     return (
         <section>
             <h2>Profile Preferences</h2>
