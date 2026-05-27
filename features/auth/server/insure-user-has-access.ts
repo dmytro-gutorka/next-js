@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { AppRoutes } from 'shared/config/app-routes';
 import { getCurrentUser } from './get-current-user';
 
-export async function unsureUserHasAccess() {
+export async function insureUserHasAccess() {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) redirect(AppRoutes.login);

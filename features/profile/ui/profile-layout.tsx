@@ -7,7 +7,7 @@ interface ProfileLayoutProps {
     children: ReactNode;
 }
 
-export async function ProfileLayout({ children }: ProfileLayoutProps) {
+export function ProfileLayout({ children }: ProfileLayoutProps) {
     return (
         <main>
             <h1>Profile</h1>

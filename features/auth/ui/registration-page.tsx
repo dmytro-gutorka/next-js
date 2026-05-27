@@ -1,6 +1,4 @@
-'use server';
-
-export async function RegistrationPage() {
+export function RegistrationPage() {
     return (
         <main>
             <h1>Registration</h1>

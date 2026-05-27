@@ -1,10 +1,8 @@
-'use server';
-
 interface TaskDetailsPageProps {
     taskId: string;
 }
 
-export async function TaskDetailsPage({ taskId }: TaskDetailsPageProps) {
+export function TaskDetailsPage({ taskId }: TaskDetailsPageProps) {
     return (
         <main>
             <h1>Task Details</h1>

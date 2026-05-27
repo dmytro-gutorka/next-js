@@ -1,13 +1,13 @@
 'use server';
 
-import { unsureUserHasAccess } from 'features/auth/server/unsure-user-has-access';
+import { insureUserHasAccess } from 'features/auth/server/insure-user-has-access';
 import { getAccessTokenCookie } from '../server/session-cookies';
 import { requestPasswordReset } from '../server/auth-api';
 import { createErrorActionState } from './action-state';
 import type { AuthActionState } from '../model/auth.types';
 
 export async function requestPasswordResetAction(): Promise<AuthActionState> {
-    await unsureUserHasAccess();
+    await insureUserHasAccess();
 
     const accessToken = await getAccessTokenCookie();
 
