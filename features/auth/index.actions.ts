@@ -1,5 +1,3 @@
-'use server';
-
 export { confirmPasswordResetAction } from './actions/confirm-password-reset.action';
 export { googleSignInAction } from './actions/google-sign-in.action';
 export { loginAction } from './actions/login.action';

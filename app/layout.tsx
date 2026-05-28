@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { RootProviders } from '@/shared/providers/root-providers';
+import { LogoutButton } from 'features/auth/index.server';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -31,6 +32,9 @@ export default function RootLayout({
             suppressHydrationWarning={true}
         >
             <body className="min-h-full flex flex-col">
+                <header>
+                    <LogoutButton />
+                </header>
                 <RootProviders>{children}</RootProviders>
             </body>
         </html>

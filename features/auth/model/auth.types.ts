@@ -1,4 +1,13 @@
-import type { Nullable } from '@/shared/types/common.types';
+import { z } from 'zod';
+import type { Nullable } from 'shared/types/common.types';
+import {
+    type SignInLocalSchema,
+    ConfirmPasswordResetSchema,
+    SignInGoogleSchema,
+    SetLocalPasswordSchema,
+    UpdatePrimaryEmailSchema,
+    SignUpFormSchema,
+} from 'features/auth/model/auth.schemas';
 
 export type AuthActionState = {
     success: boolean;
@@ -16,32 +25,6 @@ export type TokenResponse = {
 
 export type MessageResponse = {
     message: string;
-};
-
-export type SignInLocalPayload = {
-    email: string;
-    password: string;
-};
-
-export type SignUpLocalPayload = SignInLocalPayload;
-
-export type ConfirmPasswordResetPayload = {
-    token: string;
-    newPassword: string;
-    confirmPassword: string;
-};
-
-export type SignInGooglePayload = {
-    credential: string;
-};
-
-export type SetLocalPasswordPayload = {
-    password: string;
-    confirmPassword: string;
-};
-
-export type UpdatePrimaryEmailPayload = {
-    email: string;
 };
 
 export type CurrentUser = {
@@ -73,3 +56,11 @@ export type UpdatePrimaryEmailResponse = {
     message: string;
     primaryEmail: string;
 };
+
+export type SignInLocalPayload = z.infer<typeof SignInLocalSchema>;
+export type SignUpFormValues = z.input<typeof SignUpFormSchema>;
+export type SignUpLocalPayload = z.infer<typeof SignInLocalSchema>;
+export type ConfirmPasswordResetPayload = z.infer<typeof ConfirmPasswordResetSchema>;
+export type SignInGooglePayload = z.infer<typeof SignInGoogleSchema>;
+export type SetLocalPasswordPayload = z.infer<typeof SetLocalPasswordSchema>;
+export type UpdatePrimaryEmailPayload = z.infer<typeof UpdatePrimaryEmailSchema>;
