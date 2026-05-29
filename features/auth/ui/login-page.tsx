@@ -1,9 +1,5 @@
-'use client';
-
 import Link from 'next/link';
-
 import { AppRoutes } from '@/shared/config/app-routes';
-
 import { LoginForm } from './common/login-form';
 import AuthPageWrapper from 'features/auth/ui/common/auth-page-wrapper';
 

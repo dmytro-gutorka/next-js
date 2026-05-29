@@ -1,7 +1,10 @@
-export function ResetPasswordPage() {
-    return (
-        <main>
-            <h1>Reset Password</h1>
-        </main>
-    );
+import { ResetPasswordForm } from 'features/auth/ui/common/reset-password-form';
+
+interface ResetPasswordPageProps {
+    token: string;
+}
+
+export async function ResetPasswordPage({ token }: ResetPasswordPageProps) {
+
+    return <ResetPasswordForm token={token} />;
 }
