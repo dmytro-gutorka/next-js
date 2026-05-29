@@ -1,10 +1,10 @@
 import { LogoutButton } from 'features/auth/ui/logout-button';
-import { getCurrentUser } from 'features/auth/server/get-current-user';
+import { getAccessTokenCookie } from 'features/auth/server/session-cookies';
 
 async function AppHeader() {
-    const isAuthenticated = await getCurrentUser();
+    const accessToken = await getAccessTokenCookie();
 
-    return <header>{isAuthenticated && <LogoutButton />}</header>;
+    return <header>{accessToken && <LogoutButton />}</header>;
 }
 
 export default AppHeader;
