@@ -5,7 +5,16 @@ export const SignInLocalSchema = z.strictObject({
     password: z.string().min(6, 'Min password length is 6'),
 });
 
-export const SignUpLocalSchema = SignInLocalSchema;
+export const SignUpFormSchema = z
+    .strictObject({
+        email: z.email('Email is not valid'),
+        password: z.string().min(6, 'Min password length is 6'),
+        confirmPassword: z.string().min(6, 'Min password length is 6'),
+    })
+    .refine(({ password, confirmPassword }) => password === confirmPassword, {
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+    });
 
 export const ConfirmPasswordResetSchema = z
     .strictObject({
