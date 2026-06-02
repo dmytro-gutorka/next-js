@@ -6,6 +6,7 @@ export type {
     MessageResponse,
     PrimaryEmailOption,
     PrimaryEmailOptionsResponse,
+    ResetPasswordFormValues,
     SessionTokens,
     SetLocalPasswordPayload,
     SignInGooglePayload,

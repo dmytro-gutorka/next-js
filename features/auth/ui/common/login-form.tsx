@@ -8,11 +8,11 @@ import { SignInLocalSchema } from '@/features/auth/model/auth.schemas';
 import type { SignInLocalPayload } from '@/features/auth/model/auth.types';
 import { CardFooter } from '@/shared/lib/shadcn/components/ui/card';
 import { FieldGroup } from '@/shared/lib/shadcn/components/ui/field';
-import { AuthActionAlert } from './auth-action-alert';
 import { AuthFormCard } from './auth-form-card';
 import { AuthSubmitButton } from './auth-submit-button';
-import { AuthTextField } from './auth-text-field';
-import { initialAuthActionState } from 'features/auth/actions/action-state';
+import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 
 const loginFormDefaultValues: SignInLocalPayload = {
     email: '',
@@ -45,7 +45,7 @@ export function LoginForm() {
         <AuthFormCard title="Sign in" description="Use your email and password to continue.">
             <form ref={formRef} id="login-form" onSubmit={handleSubmit} className="space-y-5">
                 <FieldGroup>
-                    <AuthTextField
+                    <CustomTextField
                         id="login-email"
                         label="Email"
                         placeholder="name@example.com"
@@ -54,7 +54,7 @@ export function LoginForm() {
                         serverErrors={state.fieldErrors?.email}
                     />
 
-                    <AuthTextField
+                    <CustomTextField
                         id="login-password"
                         label="Password"
                         placeholder="Enter your password"
@@ -65,7 +65,7 @@ export function LoginForm() {
                     />
                 </FieldGroup>
 
-                <AuthActionAlert state={state} />
+                <CustomActionAlert state={state} />
             </form>
 
             <CardFooter className="border-y-transparent bg-transparent px-0">

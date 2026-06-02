@@ -2,7 +2,7 @@
 
 import { getAccessTokenCookie } from '../server/session-cookies';
 import { requestPasswordReset } from '../server/auth-api';
-import { createErrorActionState } from './action-state';
+import { createErrorActionState } from 'shared/lib/server-actions/action-state';
 import type { AuthActionState } from '../model/auth.types';
 
 export async function requestPasswordResetAction(): Promise<AuthActionState> {

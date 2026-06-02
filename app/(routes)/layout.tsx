@@ -6,7 +6,6 @@ interface MainLayout {
 }
 
 function MainLayout({ children }: MainLayout) {
-
     return (
         <>
             <AppHeader />

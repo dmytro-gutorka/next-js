@@ -17,7 +17,8 @@ export function ResetPasswordInvalidTokenState() {
                     <TriangleAlert className="size-4" />
                     <AlertTitle>Invalid reset link</AlertTitle>
                     <AlertDescription>
-                        Please request a new password reset link from your profile security settings.
+                        Please request a new password reset link from your profile security
+                        settings.
                     </AlertDescription>
                 </Alert>
 

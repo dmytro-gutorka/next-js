@@ -1,6 +1,9 @@
 export { confirmPasswordResetAction } from './actions/confirm-password-reset.action';
 export { googleSignInAction } from './actions/google-sign-in.action';
+export { linkGoogleAction } from './actions/link-google.action';
 export { loginAction } from './actions/login.action';
 export { logoutAction } from './actions/logout.action';
 export { registerAction } from './actions/register.action';
 export { requestPasswordResetAction } from './actions/request-password-reset.action';
+export { setLocalPasswordAction } from './actions/set-local-password.action';
+export { updatePrimaryEmailAction } from './actions/update-primary-email.action';

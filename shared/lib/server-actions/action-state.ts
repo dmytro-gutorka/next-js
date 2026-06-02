@@ -1,4 +1,4 @@
-import type { AuthActionState } from '../model/auth.types';
+import type { AuthActionState } from 'features/auth/model/auth.types';
 import type { ZodSafeParseError } from 'zod';
 import { z } from 'zod';
 import { getServerHttpErrorMessage } from 'shared/lib/api/http-error-helpers';

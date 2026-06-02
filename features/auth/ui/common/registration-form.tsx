@@ -3,17 +3,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { startTransition, useActionState, useRef, SubmitEvent } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { registerAction } from '@/features/auth/index.actions';
 import { CardFooter } from '@/shared/lib/shadcn/components/ui/card';
 import { FieldGroup } from '@/shared/lib/shadcn/components/ui/field';
-import { initialAuthActionState } from '../../actions/action-state';
+import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
 import { SignUpFormSchema } from 'features/auth/model/auth.schemas';
-import { AuthActionAlert } from './auth-action-alert';
 import { AuthFormCard } from './auth-form-card';
 import { AuthSubmitButton } from './auth-submit-button';
-import { AuthTextField } from './auth-text-field';
 import type { SignUpFormValues } from 'features/auth/model/auth.types';
+import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 
 const registrationFormDefaultValues: SignUpFormValues = {
     email: '',
@@ -52,7 +51,7 @@ export function RegistrationForm() {
                 className="space-y-5"
             >
                 <FieldGroup>
-                    <AuthTextField
+                    <CustomTextField
                         id="registration-email"
                         label="Email"
                         placeholder="name@example.com"
@@ -61,7 +60,7 @@ export function RegistrationForm() {
                         serverErrors={state.fieldErrors?.email}
                     />
 
-                    <AuthTextField
+                    <CustomTextField
                         id="registration-password"
                         label="Password"
                         placeholder="Create a password"
@@ -71,7 +70,7 @@ export function RegistrationForm() {
                         serverErrors={state.fieldErrors?.password}
                     />
 
-                    <AuthTextField
+                    <CustomTextField
                         id="registration-confirm-password"
                         label="Confirm password"
                         placeholder="Repeat your password"
@@ -82,7 +81,7 @@ export function RegistrationForm() {
                     />
                 </FieldGroup>
 
-                <AuthActionAlert state={state} />
+                <CustomActionAlert state={state} />
             </form>
 
             <CardFooter className="border-y-transparent bg-transparent px-0">

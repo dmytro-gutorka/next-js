@@ -5,6 +5,5 @@ interface ResetPasswordPageProps {
 }
 
 export async function ResetPasswordPage({ token }: ResetPasswordPageProps) {
-
     return <ResetPasswordForm token={token} />;
 }

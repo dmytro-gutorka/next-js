@@ -10,7 +10,7 @@ import {
     createErrorActionState,
     createValidationActionState,
     getStringFormValue,
-} from './action-state';
+} from 'shared/lib/server-actions/action-state';
 
 export async function registerAction(
     _previousState: AuthActionState,

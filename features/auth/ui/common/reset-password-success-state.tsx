@@ -21,7 +21,8 @@ export function ResetPasswordSuccessState({ message }: ResetPasswordSuccessState
                     <CheckCircle2 className="size-4" />
                     <AlertTitle>Password updated</AlertTitle>
                     <AlertDescription>
-                        {message ?? 'You can now continue using your account with the new password.'}
+                        {message ??
+                            'You can now continue using your account with the new password.'}
                     </AlertDescription>
                 </Alert>
 

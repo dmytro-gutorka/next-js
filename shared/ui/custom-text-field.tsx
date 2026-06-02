@@ -1,14 +1,13 @@
+import type { UseFormRegisterReturn, FieldError } from 'react-hook-form';
 import type { ComponentProps } from 'react';
-import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
-
+import { Input } from 'shared/lib/shadcn/components/ui/input';
 import {
     Field,
-    FieldError as FieldErrorMessage,
     FieldLabel,
-} from '@/shared/lib/shadcn/components/ui/field';
-import { Input } from '@/shared/lib/shadcn/components/ui/input';
+    FieldError as FieldErrorMessage,
+} from 'shared/lib/shadcn/components/ui/field';
 
-interface AuthTextFieldProps {
+interface CustomTextFieldProps {
     id: string;
     label: string;
     registration: UseFormRegisterReturn;
@@ -18,7 +17,7 @@ interface AuthTextFieldProps {
     type?: ComponentProps<typeof Input>['type'];
 }
 
-export function AuthTextField({
+export function CustomTextField({
     id,
     label,
     registration,
@@ -26,7 +25,7 @@ export function AuthTextField({
     serverErrors,
     placeholder,
     type = 'text',
-}: AuthTextFieldProps) {
+}: CustomTextFieldProps) {
     const errors = [error, ...(serverErrors?.map((message) => ({ message })) ?? [])];
     const isInvalid = Boolean(error) || Boolean(serverErrors?.length);
 

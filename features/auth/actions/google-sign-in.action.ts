@@ -9,7 +9,7 @@ import {
     createErrorActionState,
     createValidationActionState,
     getStringFormValue,
-} from './action-state';
+} from 'shared/lib/server-actions/action-state';
 import { AppRoutes } from 'shared/config/app-routes';
 
 export async function googleSignInAction(
