@@ -23,9 +23,3 @@ export function createErrorActionState(error: unknown): ActionState {
         message: getServerHttpErrorMessage(error),
     };
 }
-
-export function getStringFormValue(formData: FormData, name: string) {
-    const value = formData.get(name);
-
-    return typeof value === 'string' ? value : '';
-}

@@ -1,7 +1,6 @@
 import 'server-only';
 
 import { serverHttpClient } from '@/shared/server/api/server-http-client';
-
 import type {
     ConfirmPasswordResetPayload,
     CurrentUser,
@@ -16,6 +15,7 @@ import type {
     UpdatePrimaryEmailPayload,
     UpdatePrimaryEmailResponse,
 } from '../model/auth.types';
+import { getAuthHeaders } from 'shared/lib/common/helpers/getAuthHeaders';
 
 export async function signInLocal(payload: SignInLocalPayload): Promise<SessionTokens> {
     const response = await serverHttpClient.post<TokenResponse>('/auth/sign-in', payload);
@@ -43,7 +43,7 @@ export async function signInGoogle(payload: SignInGooglePayload): Promise<Sessio
 
 export async function getCurrentUser(accessToken: string): Promise<CurrentUser> {
     const response = await serverHttpClient.get<CurrentUser>('/users/me', {
-        headers: getAuthorizationHeaders(accessToken),
+        headers: getAuthHeaders(accessToken),
     });
 
     return response.data;
@@ -54,7 +54,7 @@ export async function requestPasswordReset(accessToken: string): Promise<Message
         '/auth/password-reset/request',
         {},
         {
-            headers: getAuthorizationHeaders(accessToken),
+            headers: getAuthHeaders(accessToken),
         },
     );
 
@@ -74,7 +74,7 @@ export async function confirmPasswordReset(
 
 export async function linkGoogle(accessToken: string, payload: SignInGooglePayload) {
     const response = await serverHttpClient.post<MessageResponse>('/auth/google/link', payload, {
-        headers: getAuthorizationHeaders(accessToken),
+        headers: getAuthHeaders(accessToken),
     });
 
     return response.data;
@@ -85,7 +85,7 @@ export async function setLocalPassword(accessToken: string, payload: SetLocalPas
         '/auth/local/set-password',
         payload,
         {
-            headers: getAuthorizationHeaders(accessToken),
+            headers: getAuthHeaders(accessToken),
         },
     );
 
@@ -96,7 +96,7 @@ export async function getPrimaryEmailOptions(accessToken: string) {
     const response = await serverHttpClient.get<PrimaryEmailOptionsResponse>(
         '/auth/primary-email-options',
         {
-            headers: getAuthorizationHeaders(accessToken),
+            headers: getAuthHeaders(accessToken),
         },
     );
 
@@ -108,15 +108,9 @@ export async function updatePrimaryEmail(accessToken: string, payload: UpdatePri
         '/auth/primary-email',
         payload,
         {
-            headers: getAuthorizationHeaders(accessToken),
+            headers: getAuthHeaders(accessToken),
         },
     );
 
     return response.data;
-}
-
-function getAuthorizationHeaders(accessToken: string) {
-    return {
-        Authorization: `Bearer ${accessToken}`,
-    };
 }

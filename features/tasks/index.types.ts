@@ -1,7 +1,10 @@
 export type {
+    CreateTaskPayload,
     PagePaginationResponse,
     PaginationParams,
     Task,
+    TaskFormValues,
+    TaskPayload,
     TaskPriority,
     TaskPriorityFilter,
     TaskSearchBy,
@@ -11,4 +14,6 @@ export type {
     TasksPageResponse,
     TasksPageSearchParams,
     TasksQueryState,
+    TaskViewMode,
+    UpdateTaskPayload,
 } from './model/task.types';

@@ -1,10 +1,7 @@
 'use server';
 
 import { ConfirmPasswordResetSchema } from '../model/auth.schemas';
-import type {
-    ActionState,
-    ConfirmPasswordResetPayload,
-} from '../model/auth.types';
+import type { ActionState, ConfirmPasswordResetPayload } from '../model/auth.types';
 import { confirmPasswordReset } from '../server/auth-api';
 import {
     createErrorActionState,

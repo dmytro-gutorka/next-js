@@ -3,8 +3,15 @@ import {
     TASK_SORT_BY_FILTER,
     TASK_STATUS_FILTER,
     TASKS_SEARCH_BY_PARAMS,
+    TASK_PRIORITY,
+    TASK_STATUS,
 } from './task.constants';
-import type { TasksPageSearchParams, TasksQueryState } from './task.types';
+import type {
+    TasksPageSearchParams,
+    TasksQueryState,
+    Task,
+    TaskFormInput,
+} from './task.types';
 import {
     normalizeEnumParam,
     normalizeStringParam,
@@ -45,4 +52,35 @@ export function formatTaskDate(date: string, noDateMessage = 'No date') {
         month: 'short',
         day: '2-digit',
     }).format(new Date(date));
+}
+
+export function getTaskFormDefaultValues(task?: Task): TaskFormInput {
+    return {
+        title: task?.title ?? '',
+        description: task?.description ?? '',
+        status: task?.status ?? TASK_STATUS.TODO,
+        priority: task?.priority ?? TASK_PRIORITY.MEDIUM,
+        isPrivate: task?.isPrivate ?? false,
+        deadline: task?.deadline ? task.deadline.slice(0, 10) : '',
+    };
+}
+
+export function buildTasksQueryString(
+    queryState: TasksQueryState,
+    override: Partial<TasksQueryState>,
+) {
+    const nextQueryState = {
+        ...queryState,
+        ...override,
+    };
+
+    const params = new URLSearchParams();
+
+    Object.entries(nextQueryState).forEach(([key, value]) => {
+        if (!value) return;
+
+        params.set(key, value);
+    });
+
+    return params.toString();
 }
