@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { AppRoutes } from '@/shared/config/app-routes';
-import { LoginForm } from './common/login-form';
-import AuthPageWrapper from 'features/auth/ui/common/auth-page-wrapper';
+import { LoginForm } from 'features/auth/ui/common/forms/login-form';
+import AuthPageWrapper from 'features/auth/ui/common/layout/auth-page-wrapper';
 
 export function LoginPage() {
     return (

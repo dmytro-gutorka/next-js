@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { Camera, Loader2, Upload } from 'lucide-react';
-import { useActionState, useRef, useState, useTransition, type ChangeEvent } from 'react';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { type ChangeEvent, useRef, useState, useEffect } from 'react';
+import { initialActionState } from 'shared/lib/server-actions/action-state';
 import type { User } from '@/features/user/index.types';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import {
@@ -18,6 +18,7 @@ import { Input } from '@/shared/lib/shadcn/components/ui/input';
 import { uploadAvatarAction } from '../../actions/upload-avatar.action';
 import { getUserInitials } from '../../model/profile.helpers';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
+import type { ActionState } from 'features/auth/model/auth.types';
 
 interface AvatarUploaderCardProps {
     user: User;
@@ -25,47 +26,66 @@ interface AvatarUploaderCardProps {
 
 export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [state, formAction, isActionPending] = useActionState(
-        uploadAvatarAction,
-        initialAuthActionState,
-    );
-    const [isTransitionPending, startTransition] = useTransition();
+    const [actionState, setActionState] = useState<ActionState>(initialActionState);
+    const [isPending, setIsPending] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const isSubmitting = isActionPending || isTransitionPending;
+
     const avatarUrl = previewUrl ?? user.avatarUrl;
+    const canSubmit = Boolean(selectedFile) && !isPending;
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl]);
 
     function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0] ?? null;
 
         setSelectedFile(file);
+        setActionState(initialActionState);
 
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl((currentPreviewUrl) => {
+            if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
 
-        setPreviewUrl(file ? URL.createObjectURL(file) : null);
+            return file ? URL.createObjectURL(file) : null;
+        });
     }
 
-    function handleCancel() {
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-
+    function clearSelection() {
         setSelectedFile(null);
-        setPreviewUrl(null);
+        setPreviewUrl((currentPreviewUrl) => {
+            if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
 
-        if (inputRef.current) {
-            inputRef.current.value = '';
-        }
+            return null;
+        });
+
+        if (inputRef.current) inputRef.current.value = '';
     }
 
-    function handleSubmit() {
+    async function handleSubmit() {
         if (!selectedFile) return;
 
         const formData = new FormData();
         formData.set('avatar', selectedFile);
 
-        startTransition(() => {
-            formAction(formData);
-            handleCancel();
-        });
+        setIsPending(true);
+
+        try {
+            const result = await uploadAvatarAction(formData);
+
+            setActionState(result);
+
+            if (result.success) clearSelection();
+        } finally {
+            setIsPending(false);
+        }
+    }
+
+    function handleCancel() {
+        clearSelection();
+        setActionState(initialActionState);
     }
 
     return (
@@ -76,7 +96,7 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
             </CardHeader>
 
             <CardContent className="space-y-4">
-                <CustomActionAlert state={state} />
+                <CustomActionAlert state={actionState} />
 
                 <div className="flex flex-col gap-4 md:flex-row md:items-center">
                     <div className="relative flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-muted text-2xl font-semibold uppercase">
@@ -102,27 +122,31 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
                             onChange={handleFileChange}
                             aria-label="Upload avatar"
                         />
+
                         <p className="text-sm text-muted-foreground">
                             Supported formats: JPEG, PNG and WebP. Maximum size: 5MB.
                         </p>
 
+                        {actionState.fieldErrors?.avatar?.map((error) => (
+                            <p key={error} className="text-sm text-destructive">
+                                {error}
+                            </p>
+                        ))}
+
                         <div className="flex flex-col gap-2 md:flex-row">
-                            <Button
-                                type="button"
-                                disabled={!selectedFile || isSubmitting}
-                                onClick={handleSubmit}
-                            >
-                                {isSubmitting ? (
+                            <Button type="button" disabled={!canSubmit} onClick={handleSubmit}>
+                                {isPending ? (
                                     <Loader2 className="mr-2 size-4 animate-spin" />
                                 ) : (
                                     <Upload className="mr-2 size-4" />
                                 )}
                                 Save avatar
                             </Button>
+
                             <Button
                                 type="button"
                                 variant="outline"
-                                disabled={!selectedFile || isSubmitting}
+                                disabled={!selectedFile || isPending}
                                 onClick={handleCancel}
                             >
                                 <Camera className="mr-2 size-4" />

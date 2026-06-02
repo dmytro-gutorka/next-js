@@ -1,4 +1,4 @@
-import { LogoutButton } from 'features/auth/ui/logout-button';
+import { LogoutButton } from 'features/auth/ui/common/buttons/logout-button';
 import { getAccessTokenCookie } from 'features/auth/server/session-cookies';
 
 async function AppHeader() {

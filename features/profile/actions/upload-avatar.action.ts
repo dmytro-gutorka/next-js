@@ -12,10 +12,7 @@ import type { ProfileActionState } from '../model/profile.types';
 const ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_AVATAR_SIZE_BYTES = 5 * 1024 * 1024;
 
-export async function uploadAvatarAction(
-    _previousState: ProfileActionState,
-    formData: FormData,
-): Promise<ProfileActionState> {
+export async function uploadAvatarAction(formData: FormData): Promise<ProfileActionState> {
     const accessToken = await getAccessTokenCookie();
 
     if (!accessToken) {
@@ -26,33 +23,14 @@ export async function uploadAvatarAction(
     }
 
     const avatar = formData.get('avatar');
+    const validationError = validateAvatarFile(avatar);
 
-    if (!(avatar instanceof File) || avatar.size === 0) {
+    if (validationError) {
         return {
             success: false,
-            message: 'Please select an avatar image.',
+            message: validationError,
             fieldErrors: {
-                avatar: ['Please select an avatar image.'],
-            },
-        };
-    }
-
-    if (!ALLOWED_AVATAR_TYPES.includes(avatar.type)) {
-        return {
-            success: false,
-            message: 'Avatar must be a JPEG, PNG or WebP image.',
-            fieldErrors: {
-                avatar: ['Avatar must be a JPEG, PNG or WebP image.'],
-            },
-        };
-    }
-
-    if (avatar.size > MAX_AVATAR_SIZE_BYTES) {
-        return {
-            success: false,
-            message: 'Avatar must be smaller than 5MB.',
-            fieldErrors: {
-                avatar: ['Avatar must be smaller than 5MB.'],
+                avatar: [validationError],
             },
         };
     }
@@ -68,4 +46,20 @@ export async function uploadAvatarAction(
     } catch (error) {
         return createErrorActionState(error);
     }
+}
+
+function validateAvatarFile(file: FormDataEntryValue | null) {
+    if (!(file instanceof File) || file.size === 0) {
+        return 'Please select an avatar image.';
+    }
+
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+        return 'Avatar must be a JPEG, PNG or WebP image.';
+    }
+
+    if (file.size > MAX_AVATAR_SIZE_BYTES) {
+        return 'Avatar must be smaller than 5MB.';
+    }
+
+    return null;
 }

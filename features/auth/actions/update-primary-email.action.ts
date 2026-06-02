@@ -1,19 +1,17 @@
 'use server';
 
 import { UpdatePrimaryEmailSchema } from '../model/auth.schemas';
-import type { AuthActionState } from '../model/auth.types';
+import type { ActionState, UpdatePrimaryEmailPayload } from '../model/auth.types';
 import { updatePrimaryEmail } from '../server/auth-api';
 import { getAccessTokenCookie } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
-    getStringFormValue,
 } from 'shared/lib/server-actions/action-state';
 
 export async function updatePrimaryEmailAction(
-    _previousState: AuthActionState,
-    formData: FormData,
-): Promise<AuthActionState> {
+    payload: UpdatePrimaryEmailPayload,
+): Promise<ActionState> {
     const accessToken = await getAccessTokenCookie();
 
     if (!accessToken) {
@@ -23,14 +21,12 @@ export async function updatePrimaryEmailAction(
         };
     }
 
-    const payload = UpdatePrimaryEmailSchema.safeParse({
-        email: getStringFormValue(formData, 'email'),
-    });
+    const parsedEmail = UpdatePrimaryEmailSchema.safeParse(payload);
 
-    if (!payload.success) return createValidationActionState(payload);
+    if (!parsedEmail.success) return createValidationActionState(parsedEmail);
 
     try {
-        const response = await updatePrimaryEmail(accessToken, payload.data);
+        const response = await updatePrimaryEmail(accessToken, parsedEmail.data);
 
         return {
             success: true,

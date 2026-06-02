@@ -1,19 +1,17 @@
 'use server';
 
 import { SetLocalPasswordSchema } from '../model/auth.schemas';
-import type { AuthActionState } from '../model/auth.types';
+import type { ActionState, SetLocalPasswordPayload } from '../model/auth.types';
 import { setLocalPassword } from '../server/auth-api';
 import { getAccessTokenCookie } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
-    getStringFormValue,
 } from 'shared/lib/server-actions/action-state';
 
 export async function setLocalPasswordAction(
-    _previousState: AuthActionState,
-    formData: FormData,
-): Promise<AuthActionState> {
+    payload: SetLocalPasswordPayload,
+): Promise<ActionState> {
     const accessToken = await getAccessTokenCookie();
 
     if (!accessToken) {
@@ -23,15 +21,12 @@ export async function setLocalPasswordAction(
         };
     }
 
-    const payload = SetLocalPasswordSchema.safeParse({
-        password: getStringFormValue(formData, 'password'),
-        confirmPassword: getStringFormValue(formData, 'confirmPassword'),
-    });
+    const parsedPayload = SetLocalPasswordSchema.safeParse(payload);
 
-    if (!payload.success) return createValidationActionState(payload);
+    if (!parsedPayload.success) return createValidationActionState(parsedPayload);
 
     try {
-        const response = await setLocalPassword(accessToken, payload.data);
+        const response = await setLocalPassword(accessToken, parsedPayload.data);
 
         return {
             success: true,

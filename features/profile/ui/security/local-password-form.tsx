@@ -2,53 +2,47 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { KeyRound, Loader2 } from 'lucide-react';
-import { useActionState, useTransition, SubmitEvent, useRef } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { initialActionState } from 'shared/lib/server-actions/action-state';
 import { SetLocalPasswordSchema } from '@/features/auth/model/auth.schemas';
-import type { SetLocalPasswordPayload } from '@/features/auth/index.types';
+import type { SetLocalPasswordPayload, ActionState } from '@/features/auth/index.types';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import { FieldGroup } from '@/shared/lib/shadcn/components/ui/field';
-import { setLocalPasswordAction } from 'features/auth/actions/set-local-password.action';
 import { CustomTextField } from 'shared/ui/custom-text-field';
 import { SecurityPageAlert } from 'features/profile/ui/security/security-page-alers';
+import { setLocalPasswordAction } from 'features/auth/actions/set-local-password.action';
 
-export function SetLocalPasswordForm() {
-    const [state, formAction, isActionPending] = useActionState(
-        setLocalPasswordAction,
-        initialAuthActionState,
-    );
-    const [isTransitionPending, startTransition] = useTransition();
+const localPasswordFormDefaultValues = {
+    password: '',
+    confirmPassword: '',
+};
 
-    const formRef = useRef<HTMLFormElement>(null);
+export function LocalPasswordForm() {
+    const [actionState, setActionState] = useState<ActionState>(initialActionState);
+    const [isPending, setIsPending] = useState(false);
+
     const form = useForm<SetLocalPasswordPayload>({
         resolver: zodResolver(SetLocalPasswordSchema),
-        defaultValues: {
-            password: '',
-            confirmPassword: '',
-        },
+        defaultValues: localPasswordFormDefaultValues,
         mode: 'onChange',
     });
 
-    const isSubmitting = isActionPending || isTransitionPending;
+    const handleSubmit = form.handleSubmit(async (values: SetLocalPasswordPayload) => {
+        setIsPending(true);
 
-    function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
+        try {
+            const result = await setLocalPasswordAction(values);
 
-        void form.handleSubmit(() => {
-            if (!formRef.current) return;
-
-            const formData = new FormData(formRef.current);
-
-            startTransition(() => {
-                formAction(formData);
-            });
-        })(event);
-    }
+            setActionState(result);
+        } finally {
+            setIsPending(false);
+        }
+    });
 
     return (
-        <form className="space-y-4" onSubmit={handleSubmit} ref={formRef}>
-            <SecurityPageAlert message={state.message} isSuccess={state.success} />
+        <form className="space-y-4" onSubmit={handleSubmit}>
+            <SecurityPageAlert message={actionState.message} isSuccess={actionState.success} />
 
             <FieldGroup>
                 <CustomTextField
@@ -58,7 +52,7 @@ export function SetLocalPasswordForm() {
                     placeholder="Enter password"
                     registration={form.register('password')}
                     error={form.formState.errors.password}
-                    serverErrors={state.fieldErrors?.password}
+                    serverErrors={actionState.fieldErrors?.password}
                 />
                 <CustomTextField
                     id="confirmPassword"
@@ -67,16 +61,16 @@ export function SetLocalPasswordForm() {
                     placeholder="Repeat password"
                     registration={form.register('confirmPassword')}
                     error={form.formState.errors.confirmPassword}
-                    serverErrors={state.fieldErrors?.confirmPassword}
+                    serverErrors={actionState.fieldErrors?.confirmPassword}
                 />
             </FieldGroup>
 
             <Button
                 type="submit"
-                disabled={isSubmitting || state.success || !form.formState.isValid}
+                disabled={isPending || actionState.success || !form.formState.isValid}
                 className="w-full md:w-auto"
             >
-                {isSubmitting ? (
+                {isPending ? (
                     <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : (
                     <KeyRound className="mr-2 size-4" />

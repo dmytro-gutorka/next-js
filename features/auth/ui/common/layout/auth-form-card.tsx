@@ -6,7 +6,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/shared/lib/shadcn/components/ui/card';
+} from 'shared/lib/shadcn/components/ui/card';
 
 interface AuthFormCardProps {
     title: string;

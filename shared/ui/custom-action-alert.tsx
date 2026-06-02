@@ -1,8 +1,8 @@
-import type { AuthActionState } from 'features/auth/model/auth.types';
+import type { ActionState } from 'features/auth/model/auth.types';
 import { Alert, AlertDescription } from 'shared/lib/shadcn/components/ui/alert';
 
 interface CustomActionAlertProps {
-    state: AuthActionState;
+    state: ActionState;
 }
 
 export function CustomActionAlert({ state }: CustomActionAlertProps) {

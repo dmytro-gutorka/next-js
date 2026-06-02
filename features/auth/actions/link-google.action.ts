@@ -1,19 +1,15 @@
 'use server';
 
+import type { ActionState, SignInGooglePayload } from '../model/auth.types';
 import { SignInGoogleSchema } from '../model/auth.schemas';
-import type { AuthActionState } from '../model/auth.types';
 import { linkGoogle } from '../server/auth-api';
 import { getAccessTokenCookie } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
-    getStringFormValue,
 } from 'shared/lib/server-actions/action-state';
 
-export async function linkGoogleAction(
-    _previousState: AuthActionState,
-    formData: FormData,
-): Promise<AuthActionState> {
+export async function linkGoogleAction(payload: SignInGooglePayload): Promise<ActionState> {
     const accessToken = await getAccessTokenCookie();
 
     if (!accessToken) {
@@ -23,14 +19,12 @@ export async function linkGoogleAction(
         };
     }
 
-    const payload = SignInGoogleSchema.safeParse({
-        credential: getStringFormValue(formData, 'credential'),
-    });
+    const parsedPayload = SignInGoogleSchema.safeParse(payload);
 
-    if (!payload.success) return createValidationActionState(payload);
+    if (!parsedPayload.success) return createValidationActionState(parsedPayload);
 
     try {
-        const response = await linkGoogle(accessToken, payload.data);
+        const response = await linkGoogle(accessToken, parsedPayload.data);
 
         return {
             success: true,

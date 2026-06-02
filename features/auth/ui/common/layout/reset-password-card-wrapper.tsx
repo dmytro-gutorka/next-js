@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { AuthFormCard } from './auth-form-card';
+import { AuthFormCard } from 'features/auth/ui/common/layout/auth-form-card';
 
 interface ResetPasswordCardLayoutProps {
     title: string;
@@ -7,7 +7,7 @@ interface ResetPasswordCardLayoutProps {
     children: ReactNode;
 }
 
-export function ResetPasswordCardLayout({
+export function ResetPasswordCardWrapper({
     title,
     description,
     children,

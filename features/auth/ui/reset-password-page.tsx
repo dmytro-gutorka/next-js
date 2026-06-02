@@ -1,4 +1,4 @@
-import { ResetPasswordForm } from 'features/auth/ui/common/reset-password-form';
+import { ResetPasswordForm } from 'features/auth/ui/common/forms/reset-password-form';
 
 interface ResetPasswordPageProps {
     token: string;

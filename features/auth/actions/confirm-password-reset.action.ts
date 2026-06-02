@@ -1,28 +1,25 @@
 'use server';
 
 import { ConfirmPasswordResetSchema } from '../model/auth.schemas';
-import type { AuthActionState } from '../model/auth.types';
+import type {
+    ActionState,
+    ConfirmPasswordResetPayload,
+} from '../model/auth.types';
 import { confirmPasswordReset } from '../server/auth-api';
 import {
     createErrorActionState,
     createValidationActionState,
-    getStringFormValue,
 } from 'shared/lib/server-actions/action-state';
 
 export async function confirmPasswordResetAction(
-    _previousState: AuthActionState,
-    formData: FormData,
-): Promise<AuthActionState> {
-    const payload = ConfirmPasswordResetSchema.safeParse({
-        token: getStringFormValue(formData, 'token'),
-        newPassword: getStringFormValue(formData, 'newPassword'),
-        confirmPassword: getStringFormValue(formData, 'confirmPassword'),
-    });
+    payload: ConfirmPasswordResetPayload,
+): Promise<ActionState> {
+    const parsedPayload = ConfirmPasswordResetSchema.safeParse(payload);
 
-    if (!payload.success) return createValidationActionState(payload);
+    if (!parsedPayload.success) return createValidationActionState(parsedPayload);
 
     try {
-        const response = await confirmPasswordReset(payload.data);
+        const response = await confirmPasswordReset(parsedPayload.data);
 
         return {
             success: true,

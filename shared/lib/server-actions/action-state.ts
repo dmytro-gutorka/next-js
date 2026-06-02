@@ -1,13 +1,13 @@
-import type { AuthActionState } from 'features/auth/model/auth.types';
+import type { ActionState } from 'features/auth/model/auth.types';
 import type { ZodSafeParseError } from 'zod';
 import { z } from 'zod';
 import { getServerHttpErrorMessage } from 'shared/lib/api/http-error-helpers';
 
-export const initialAuthActionState: AuthActionState = {
+export const initialActionState = {
     success: false,
-};
+} satisfies ActionState;
 
-export function createValidationActionState(payload: ZodSafeParseError<unknown>): AuthActionState {
+export function createValidationActionState(payload: ZodSafeParseError<unknown>): ActionState {
     const { fieldErrors } = z.flattenError(payload.error);
 
     return {
@@ -17,7 +17,7 @@ export function createValidationActionState(payload: ZodSafeParseError<unknown>)
     };
 }
 
-export function createErrorActionState(error: unknown): AuthActionState {
+export function createErrorActionState(error: unknown): ActionState {
     return {
         success: false,
         message: getServerHttpErrorMessage(error),

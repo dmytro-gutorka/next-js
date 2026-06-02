@@ -1,6 +1,7 @@
 export const AppRoutes = {
     home: '/',
     tasks: '/tasks',
+    taskDetails: (taskId: string) => `/tasks/${taskId}`,
     login: '/login',
     registration: '/registration',
     resetPassword: '/reset-password',

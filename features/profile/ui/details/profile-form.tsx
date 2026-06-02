@@ -2,9 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, RotateCcw, Save } from 'lucide-react';
-import { useActionState, useEffect, useTransition, useRef, SubmitEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
 import type { User } from '@/features/user/index.types';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import {
@@ -21,24 +20,25 @@ import {
     mapUserToProfileFormValues,
 } from '../../model/profile.helpers';
 import { ProfileFormSchema } from '../../model/profile.schemas';
-import type { ProfileFormValues } from '../../model/profile.types';
+import type { ProfileFormValues, ProfileActionState } from '../../model/profile.types';
 import { ProfileCompletenessCard } from './profile-completeness-card';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import { CustomTextField } from 'shared/ui/custom-text-field';
+
+const initialProfileActionState: ProfileActionState = {
+    success: false,
+};
 
 interface ProfileFormProps {
     user: User;
 }
 
 export function ProfileForm({ user }: ProfileFormProps) {
-    const [isTransitionPending, startTransition] = useTransition();
-    const [state, formAction, isActionPending] = useActionState(
-        updateProfileAction,
-        initialAuthActionState,
-    );
+    const [actionState, setActionState] = useState<ProfileActionState>(initialProfileActionState);
+    const [isPending, setIsPending] = useState(false);
 
-    const formRef = useRef<HTMLFormElement>(null);
     const defaultValues = mapUserToProfileFormValues(user);
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(ProfileFormSchema),
         defaultValues,
@@ -46,29 +46,29 @@ export function ProfileForm({ user }: ProfileFormProps) {
     });
 
     const values = useWatch({ control: form.control });
-    const isSubmitting = isActionPending || isTransitionPending;
     const completeness = calculateProfileCompleteness(user, values);
 
     useEffect(() => {
-        form.reset(mapUserToProfileFormValues(user));
-    }, [form, user]);
+        form.reset(defaultValues);
+    }, [defaultValues, form]);
 
-    function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
+    const handleSubmit = form.handleSubmit(async (values) => {
+        setIsPending(true);
 
-        void form.handleSubmit(() => {
-            if (!formRef.current) return;
+        try {
+            const result = await updateProfileAction(values);
 
-            const formData = new FormData(formRef.current);
+            setActionState(result);
 
-            startTransition(() => {
-                formAction(formData);
-            });
-        })(event);
-    }
+            if (result.success) form.reset(values);
+        } finally {
+            setIsPending(false);
+        }
+    });
 
     function handleCancel() {
         form.reset(defaultValues);
+        setActionState(initialProfileActionState);
     }
 
     return (
@@ -82,9 +82,9 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                    <CustomActionAlert state={state} />
+                    <CustomActionAlert state={actionState} />
 
-                    <form className="space-y-5" ref={formRef} onSubmit={handleSubmit}>
+                    <form className="space-y-5" onSubmit={handleSubmit}>
                         <FieldGroup>
                             <CustomTextField
                                 id="name"
@@ -92,7 +92,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 placeholder="Enter your name"
                                 registration={form.register('name')}
                                 error={form.formState.errors.name}
-                                serverErrors={state.fieldErrors?.name}
+                                serverErrors={actionState.fieldErrors?.name}
                             />
                             <CustomTextField
                                 id="surname"
@@ -100,7 +100,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 placeholder="Enter your surname"
                                 registration={form.register('surname')}
                                 error={form.formState.errors.surname}
-                                serverErrors={state.fieldErrors?.surname}
+                                serverErrors={actionState.fieldErrors?.surname}
                             />
                             <CustomTextField
                                 id="birthday"
@@ -108,7 +108,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 label="Birthday"
                                 registration={form.register('birthday')}
                                 error={form.formState.errors.birthday}
-                                serverErrors={state.fieldErrors?.birthday}
+                                serverErrors={actionState.fieldErrors?.birthday}
                             />
                         </FieldGroup>
 
@@ -116,7 +116,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             <Button
                                 type="button"
                                 variant="outline"
-                                disabled={isSubmitting || !form.formState.isDirty}
+                                disabled={isPending || !form.formState.isDirty}
                                 onClick={handleCancel}
                             >
                                 <RotateCcw className="mr-2 size-4" />
@@ -125,12 +125,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             <Button
                                 type="submit"
                                 disabled={
-                                    isSubmitting ||
-                                    !form.formState.isDirty ||
-                                    !form.formState.isValid
+                                    isPending || !form.formState.isDirty || !form.formState.isValid
                                 }
                             >
-                                {isSubmitting ? (
+                                {isPending ? (
                                     <Loader2 className="mr-2 size-4 animate-spin" />
                                 ) : (
                                     <Save className="mr-2 size-4" />

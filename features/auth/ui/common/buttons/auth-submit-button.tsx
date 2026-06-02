@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react';
 
-import { Button } from '@/shared/lib/shadcn/components/ui/button';
+import { Button } from 'shared/lib/shadcn/components/ui/button';
 
 interface AuthSubmitButtonProps {
     children: string;

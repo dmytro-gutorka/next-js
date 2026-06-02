@@ -5,10 +5,11 @@ import {
     type CredentialResponse,
     type GsiButtonConfiguration,
 } from '@react-oauth/google';
-import { startTransition, useActionState } from 'react';
-import { googleSignInAction, linkGoogleAction } from '@/features/auth/index.actions';
-import { Alert, AlertDescription } from '@/shared/lib/shadcn/components/ui/alert';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { useState } from 'react';
+import { googleSignInAction, linkGoogleAction } from 'features/auth/index.actions';
+import { Alert, AlertDescription } from 'shared/lib/shadcn/components/ui/alert';
+import type { ActionState } from 'features/auth/model/auth.types';
+import { initialActionState } from 'shared/lib/server-actions/action-state';
 
 interface GoogleAuthButtonProps {
     text?: GsiButtonConfiguration['text'];
@@ -19,19 +20,21 @@ export function GoogleAuthButton({
     text = 'continue_with',
     mode = 'signIn',
 }: GoogleAuthButtonProps) {
+    const [actionState, setActionState] = useState<ActionState>(initialActionState);
+
     const action = mode === 'link' ? linkGoogleAction : googleSignInAction;
-    const [state, formAction] = useActionState(action, initialAuthActionState);
     const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
-    function handleSuccess(credentialResponse: CredentialResponse) {
+    async function handleSuccess(credentialResponse: CredentialResponse) {
         if (!credentialResponse.credential) return;
 
-        const formData = new FormData();
-        formData.set('credential', credentialResponse.credential);
+        const payload = {
+            credential: credentialResponse.credential,
+        };
 
-        startTransition(() => {
-            formAction(formData);
-        });
+        const result = await action(payload);
+
+        setActionState(result);
     }
 
     if (!googleClientId) {
@@ -48,9 +51,9 @@ export function GoogleAuthButton({
                 onError={() => undefined}
             />
 
-            {state.message && (
-                <Alert variant={state.success ? 'default' : 'destructive'}>
-                    <AlertDescription>{state.message}</AlertDescription>
+            {actionState.message && (
+                <Alert variant={actionState.success ? 'default' : 'destructive'}>
+                    <AlertDescription>{actionState.message}</AlertDescription>
                 </Alert>
             )}
         </div>

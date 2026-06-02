@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/shared/lib/shadcn/components/ui/card';
-import { GoogleAuthButton } from 'features/auth/ui/common/google-auth-button';
+import { GoogleAuthButton } from 'features/auth/ui/common/buttons/google-auth-button';
 
 export function LinkGoogleCard() {
     return (

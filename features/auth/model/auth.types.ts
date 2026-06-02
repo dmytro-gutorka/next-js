@@ -11,7 +11,7 @@ import {
     ResetPasswordFormSchema,
 } from 'features/auth/model/auth.schemas';
 
-export type AuthActionState = {
+export type ActionState = {
     success: boolean;
     message?: string;
     fieldErrors?: Record<string, string[]>;

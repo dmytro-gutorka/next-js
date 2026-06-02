@@ -5,7 +5,7 @@ import {
     Card,
     CardContent,
 } from 'shared/lib/shadcn/components/ui/card';
-import { SetLocalPasswordForm } from 'features/profile/ui/security/set-local-password-form';
+import { LocalPasswordForm } from 'features/profile/ui/security/local-password-form';
 import { PrimaryEmailSelector } from 'features/profile/ui/security/primary-email-selector';
 import { RequestPasswordResetCard } from 'features/profile/ui/security/request-password-reset-card';
 import { LinkGoogleCard } from 'features/profile/ui/security/link-google-card';
@@ -38,7 +38,7 @@ export async function ProfileSecurityPage() {
                     </CardHeader>
 
                     <CardContent>
-                        <SetLocalPasswordForm />
+                        <LocalPasswordForm />
                     </CardContent>
                 </Card>
             </CardContent>

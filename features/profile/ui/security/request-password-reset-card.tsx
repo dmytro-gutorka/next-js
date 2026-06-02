@@ -3,7 +3,7 @@
 import { KeyRound, Loader2 } from 'lucide-react';
 import { useActionState } from 'react';
 import { requestPasswordResetAction } from '@/features/auth/index.actions';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { initialActionState } from 'shared/lib/server-actions/action-state';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import {
     Card,
@@ -16,7 +16,7 @@ import { SecurityPageAlert } from 'features/profile/ui/security/security-page-al
 export function RequestPasswordResetCard() {
     const [state, formAction, isPending] = useActionState(
         requestPasswordResetAction,
-        initialAuthActionState,
+        initialActionState,
     );
 
     return (

@@ -1,9 +1,9 @@
 'use client';
 
-import type { PrimaryEmailOptionsResponse } from '@/features/auth/index.types';
+import type { PrimaryEmailOptionsResponse, ActionState } from '@/features/auth/index.types';
 import { CheckCircle2, Loader2, Mail } from 'lucide-react';
-import { useActionState, useState, useTransition } from 'react';
-import { initialAuthActionState } from 'shared/lib/server-actions/action-state';
+import { useState } from 'react';
+import { initialActionState } from 'shared/lib/server-actions/action-state';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import {
     Card,
@@ -29,11 +29,9 @@ interface PrimaryEmailSelectorProps {
     options: Nullable<PrimaryEmailOptionsResponse>;
 }
 export function PrimaryEmailSelector({ options }: PrimaryEmailSelectorProps) {
-    const [state, formAction, isActionPending] = useActionState(
-        updatePrimaryEmailAction,
-        initialAuthActionState,
-    );
-    const [isTransitionPending, startTransition] = useTransition();
+    const [actionState, setActionState] = useState<ActionState>(initialActionState);
+    const [isPending, setIsPending] = useState(false);
+
     const [selectedEmail, setSelectedEmail] = useState<string>('');
 
     const emails = options?.emails ?? [];
@@ -45,20 +43,20 @@ export function PrimaryEmailSelector({ options }: PrimaryEmailSelectorProps) {
     );
 
     const isPrimarySelected = currentSelectedEmail === primaryEmail;
-    const isSubmitPending = isActionPending || isTransitionPending;
-    const isSubmitDisabled = isSubmitPending || !currentSelectedEmail || isPrimarySelected;
+    const isSubmitDisabled = isPending || !currentSelectedEmail || isPrimarySelected;
 
-    function handleSubmit() {
-        if (!currentSelectedEmail || isPrimarySelected) {
-            return;
+    async function handleSubmit() {
+        if (!currentSelectedEmail || isPrimarySelected) return;
+
+        setIsPending(true);
+
+        try {
+            const result = await updatePrimaryEmailAction({ email: currentSelectedEmail });
+
+            setActionState(result);
+        } finally {
+            setIsPending(false);
         }
-
-        const formData = new FormData();
-        formData.set('email', currentSelectedEmail);
-
-        startTransition(() => {
-            formAction(formData);
-        });
     }
 
     return (
@@ -75,7 +73,7 @@ export function PrimaryEmailSelector({ options }: PrimaryEmailSelectorProps) {
             </CardHeader>
 
             <CardContent className="space-y-4">
-                <SecurityPageAlert message={state.message} isSuccess={state.success} />
+                <SecurityPageAlert message={actionState.message} isSuccess={actionState.success} />
 
                 {!emails.length && (
                     <div className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
@@ -115,7 +113,7 @@ export function PrimaryEmailSelector({ options }: PrimaryEmailSelectorProps) {
                                 disabled={isSubmitDisabled}
                                 onClick={handleSubmit}
                             >
-                                {isSubmitPending ? (
+                                {isPending ? (
                                     <Loader2 className="mr-2 size-4 animate-spin" />
                                 ) : (
                                     <CheckCircle2 className="mr-2 size-4" />

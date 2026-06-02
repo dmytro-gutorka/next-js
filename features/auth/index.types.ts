@@ -1,5 +1,5 @@
 export type {
-    AuthActionState,
+    ActionState,
     AuthProvider,
     ConfirmPasswordResetPayload,
     CurrentUser,

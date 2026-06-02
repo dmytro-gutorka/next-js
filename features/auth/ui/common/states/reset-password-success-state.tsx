@@ -1,10 +1,10 @@
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { AppRoutes } from '@/shared/config/app-routes';
-import { Alert, AlertDescription, AlertTitle } from '@/shared/lib/shadcn/components/ui/alert';
-import { Button } from '@/shared/lib/shadcn/components/ui/button';
+import { AppRoutes } from 'shared/config/app-routes';
+import { Alert, AlertDescription, AlertTitle } from 'shared/lib/shadcn/components/ui/alert';
+import { Button } from 'shared/lib/shadcn/components/ui/button';
 
-import { ResetPasswordCardLayout } from './reset-password-card-layout';
+import { ResetPasswordCardWrapper } from 'features/auth/ui/common/layout/reset-password-card-wrapper';
 
 interface ResetPasswordSuccessStateProps {
     message?: string;
@@ -12,7 +12,7 @@ interface ResetPasswordSuccessStateProps {
 
 export function ResetPasswordSuccessState({ message }: ResetPasswordSuccessStateProps) {
     return (
-        <ResetPasswordCardLayout
+        <ResetPasswordCardWrapper
             title="Password reset"
             description="Your password has been updated successfully."
         >
@@ -30,6 +30,6 @@ export function ResetPasswordSuccessState({ message }: ResetPasswordSuccessState
                     <Link href={AppRoutes.profile}>Go to profile</Link>
                 </Button>
             </div>
-        </ResetPasswordCardLayout>
+        </ResetPasswordCardWrapper>
     );
 }
