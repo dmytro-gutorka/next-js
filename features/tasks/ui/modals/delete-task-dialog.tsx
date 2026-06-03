@@ -1,24 +1,18 @@
 'use client';
 
-import { Loader2, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { AppRoutes } from '@/shared/config/app-routes';
+
 import { deleteTaskAction } from '@/features/tasks/index.actions';
+import { AppRoutes } from '@/shared/config/app-routes';
+import { useModalState, ConfirmationModal } from '@/shared/components/modal';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/shared/lib/shadcn/components/ui/dialog';
+import type { ActionState } from '@/features/auth/model/auth.types';
+import { initialActionState } from '@/shared/lib/server-actions/action-state';
+
 import type { Task } from '../../model/task.types';
 import { TaskActionAlert } from './task-action-alert';
-import { useRouter } from 'next/navigation';
-import type { ActionState } from 'features/auth/model/auth.types';
-import { initialActionState } from 'shared/lib/server-actions/action-state';
 
 interface DeleteTaskDialogProps {
     task: Task;
@@ -32,7 +26,7 @@ export function DeleteTaskDialog({
     redirectAfterDelete = false,
 }: DeleteTaskDialogProps) {
     const router = useRouter();
-    const [open, setOpen] = useState(false);
+    const deleteModal = useModalState();
     const [isPending, setIsPending] = useState(false);
     const [actionState, setActionState] = useState<ActionState>(initialActionState);
 
@@ -45,7 +39,7 @@ export function DeleteTaskDialog({
             setActionState(result);
 
             if (result.success) {
-                setOpen(false);
+                deleteModal.closeModal();
                 setActionState(initialActionState);
 
                 if (redirectAfterDelete) router.replace(AppRoutes.tasks);
@@ -58,50 +52,37 @@ export function DeleteTaskDialog({
     function handleOpenChange(nextOpen: boolean) {
         if (isPending) return;
 
-        setOpen(nextOpen);
+        deleteModal.setOpen(nextOpen);
 
         if (!nextOpen) setActionState(initialActionState);
     }
 
     return (
-        <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogTrigger asChild>
-                <Button type="button" variant="destructive" size={size} aria-label="Delete task">
-                    <Trash2 className={size === 'icon' ? 'size-4' : 'mr-2 size-4'} />
-                    {size !== 'icon' && 'Delete'}
-                </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Delete task</DialogTitle>
-                    <DialogDescription>
-                        Are you sure you want to delete “{task.title}”? This action cannot be
-                        undone.
-                    </DialogDescription>
-                </DialogHeader>
+        <>
+            <Button
+                type="button"
+                variant="destructive"
+                size={size}
+                aria-label="Delete task"
+                onClick={deleteModal.openModal}
+            >
+                <Trash2 className={size === 'icon' ? 'size-4' : 'mr-2 size-4'} />
+                {size !== 'icon' && 'Delete'}
+            </Button>
 
+            <ConfirmationModal
+                open={deleteModal.open}
+                onOpenChange={handleOpenChange}
+                title="Delete task"
+                description={`Are you sure you want to delete “${task.title}”?`}
+                confirmLabel="Delete"
+                cancelLabel="Cancel"
+                confirmVariant="destructive"
+                isLoading={isPending}
+                onConfirm={handleDelete}
+            >
                 <TaskActionAlert state={actionState} />
-
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        disabled={isPending}
-                        onClick={() => handleOpenChange(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="destructive"
-                        disabled={isPending}
-                        onClick={handleDelete}
-                    >
-                        {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-                        Delete
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+            </ConfirmationModal>
+        </>
     );
 }

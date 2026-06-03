@@ -8,6 +8,8 @@ import {
     createErrorActionState,
     createValidationActionState,
 } from 'shared/lib/server-actions/action-state';
+import { revalidatePath } from 'next/cache';
+import { AppRoutes } from 'shared/config/app-routes';
 
 export async function updatePrimaryEmailAction(
     payload: UpdatePrimaryEmailPayload,
@@ -28,6 +30,7 @@ export async function updatePrimaryEmailAction(
     try {
         const response = await updatePrimaryEmail(accessToken, parsedEmail.data);
 
+        revalidatePath(AppRoutes.profileDetails);
         return {
             success: true,
             message: response.message,

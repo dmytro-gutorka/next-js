@@ -7,9 +7,11 @@ import type {
     TasksQueryState,
     CreateTaskPayload,
     UpdateTaskPayload,
+    TasksCursorResponse,
 } from '../model/task.types';
 import { TASKS_PAGE_SIZE } from 'features/tasks/model/task.constants';
 import { getAuthHeaders } from 'shared/lib/common/helpers/getAuthHeaders';
+import type { CursorParams } from 'shared/types/common.types';
 
 export async function getTasksPage(
     accessToken: string,
@@ -22,6 +24,15 @@ export async function getTasksPage(
             ...queryState,
             limit,
         },
+    });
+
+    return response.data;
+}
+
+export async function getTasksFeedPage(accessToken: string, params: Partial<CursorParams>) {
+    const response = await serverHttpClient.get<TasksCursorResponse>('/tasks/feed', {
+        headers: getAuthHeaders(accessToken),
+        params,
     });
 
     return response.data;

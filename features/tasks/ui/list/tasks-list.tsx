@@ -1,4 +1,4 @@
-import { Calendar, Lock } from 'lucide-react';
+import { Calendar, Lock, Loader2 } from 'lucide-react';
 
 import { AppRoutes } from '@/shared/config/app-routes';
 import {
@@ -17,13 +17,37 @@ import { TasksEmptyState } from './tasks-empty-state';
 import { TaskCardActions } from './task-card-actions';
 import Link from 'next/link';
 import { formatTaskDate } from 'features/tasks/model/task.helpers';
+import type { RefObject } from 'react';
 
 interface TasksListProps {
     tasks: Task[];
+    isFirstPageLoading: boolean;
+    isFetchingNextPage: boolean;
+    hasNextPage: boolean;
+    errorMessage: string | null;
+    loadMoreRef: RefObject<HTMLDivElement | null>;
 }
 
-export function TasksList({ tasks }: TasksListProps) {
-    if (!tasks.length) return <TasksEmptyState />;
+export function TasksList({
+    tasks,
+    isFirstPageLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    errorMessage,
+    loadMoreRef,
+}: TasksListProps) {
+    if (isFirstPageLoading) {
+        return (
+            <div className="space-y-3">
+                {Array.from({ length: 4 }, (_, index) => (
+                    <div key={index} className="h-32 animate-pulse rounded-xl border bg-muted/30" />
+                ))}
+            </div>
+        );
+    }
+
+    if (!tasks.length && !errorMessage) return <TasksEmptyState />;
+
 
     return (
         <div className="space-y-3">
@@ -57,6 +81,22 @@ export function TasksList({ tasks }: TasksListProps) {
                     </CardContent>
                 </Card>
             ))}
+
+            {errorMessage && <p className="text-center text-sm text-destructive">{errorMessage}</p>}
+
+            <div ref={loadMoreRef} className="flex min-h-8 items-center justify-center py-2">
+                {isFetchingNextPage && (
+                    <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader2 className="size-4 animate-spin" />
+                        Loading more tasks...
+                    </p>
+                )}
+                {!isFetchingNextPage && hasNextPage && (
+                    <p className="text-sm text-muted-foreground">Scroll to load more tasks</p>
+                )}
+            </div>
         </div>
     );
 }
+
+

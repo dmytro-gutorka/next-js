@@ -2,10 +2,12 @@ import Link from 'next/link';
 import { AppRoutes } from '@/shared/config/app-routes';
 import { LoginForm } from 'features/auth/ui/common/forms/login-form';
 import AuthPageWrapper from 'features/auth/ui/common/layout/auth-page-wrapper';
+import { GoogleAuthButton } from 'features/auth/ui/common/buttons/google-auth-button';
 
 export function LoginPage() {
     return (
         <AuthPageWrapper>
+            <GoogleAuthButton />
             <LoginForm />
             <p className="text-center text-sm text-muted-foreground">
                 Don not have an account?

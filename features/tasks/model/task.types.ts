@@ -1,4 +1,4 @@
-import type { ValueOf } from '@/shared/types/common.types';
+import type { ValueOf, CursorPaginationResponse } from '@/shared/types/common.types';
 import { z } from 'zod';
 import {
     TASK_PRIORITY,
@@ -24,8 +24,8 @@ export type CreateTaskPayload = TaskPayload;
 export type UpdateTaskPayload = Partial<TaskPayload>;
 
 export type TasksPageSearchParams = Partial<Record<keyof TasksQueryState, string | string[]>>;
-
 export type TasksPageResponse = PagePaginationResponse<Task>;
+export type TasksCursorResponse = CursorPaginationResponse<Task>;
 
 export type TaskFormInput = z.input<typeof TaskFormSchema>;
 export type TaskFormValues = z.output<typeof TaskFormSchema>;

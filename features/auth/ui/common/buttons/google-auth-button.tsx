@@ -37,9 +37,7 @@ export function GoogleAuthButton({
         setActionState(result);
     }
 
-    if (!googleClientId) {
-        return null;
-    }
+    if (!googleClientId) return null;
 
     return (
         <div className="space-y-3">

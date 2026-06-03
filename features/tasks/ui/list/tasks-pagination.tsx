@@ -1,5 +1,3 @@
-'use client';
-
 import {
     Pagination,
     PaginationContent,
@@ -78,4 +76,3 @@ export function TasksPagination({ queryState, page, totalPages }: TasksPaginatio
         </Pagination>
     );
 }
-

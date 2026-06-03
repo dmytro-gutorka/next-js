@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, RotateCcw, Save } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import type { User } from '@/features/user/index.types';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
@@ -37,7 +37,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     const [actionState, setActionState] = useState<ProfileActionState>(initialProfileActionState);
     const [isPending, setIsPending] = useState(false);
 
-    const defaultValues = mapUserToProfileFormValues(user);
+    const defaultValues = useMemo(() => mapUserToProfileFormValues(user), [user]);
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(ProfileFormSchema),

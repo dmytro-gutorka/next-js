@@ -83,7 +83,6 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                             options={[
                                 [TASKS_SEARCH_BY_PARAMS.TITLE, 'Title'],
                                 [TASKS_SEARCH_BY_PARAMS.DESCRIPTION, 'Description'],
-
                             ]}
                         />
                     </div>
@@ -116,7 +115,7 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                 </div>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
                 <CustomSelect
                     label="Status"
                     value={queryState.status}

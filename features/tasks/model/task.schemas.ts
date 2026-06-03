@@ -1,16 +1,11 @@
 import { z } from 'zod';
 import { TASK_STATUS_OPTIONS, TASK_PRIORITY_OPTIONS } from 'features/tasks/model/task.constants';
 
-const taskDeadlineSchema = z
+const OptionalDateSchema = z
     .string()
-    .trim()
-    .optional()
-    .transform((value) => value || null)
-    .refine((value) => {
-        if (!value) return true;
-
-        return !Number.isNaN(new Date(value).getTime());
-    }, 'Invalid deadline date.');
+    .refine((value) => !value || !Number.isNaN(Date.parse(value)), {
+        message: 'Deadline must be a valid date.',
+    });
 
 export const TaskFormSchema = z.object({
     title: z
@@ -25,6 +20,6 @@ export const TaskFormSchema = z.object({
         .max(1000, 'Description must be at most 1000 characters.'),
     status: z.enum(TASK_STATUS_OPTIONS),
     priority: z.enum(TASK_PRIORITY_OPTIONS),
-    deadline: taskDeadlineSchema,
+    deadline: OptionalDateSchema,
     isPrivate: z.boolean(),
 });

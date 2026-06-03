@@ -1,19 +1,29 @@
-import type { Task } from '../../model/task.types';
+import type { TasksPageResponse, TasksQueryState } from '../../model/task.types';
 import { TasksEmptyState } from './tasks-empty-state';
 import { TaskCard } from './task-card';
+import { TasksPagination } from 'features/tasks/ui/list/tasks-pagination';
 
 interface TasksGridProps {
-    tasks: Task[];
+    tasksPage: TasksPageResponse;
+    queryState: TasksQueryState;
 }
 
-export function TasksGrid({ tasks }: TasksGridProps) {
-    if (!tasks.length) return <TasksEmptyState />;
+export function TasksGrid({ tasksPage, queryState }: TasksGridProps) {
+    if (!tasksPage.items.length) return <TasksEmptyState />;
 
     return (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {tasks.map((task) => (
+            {tasksPage.items.map((task) => (
                 <TaskCard key={task.id} task={task} />
             ))}
+
+            <div className="col-span-full flex justify-center">
+                <TasksPagination
+                    queryState={queryState}
+                    page={tasksPage.page}
+                    totalPages={tasksPage.totalPages}
+                />
+            </div>
         </div>
     );
 }
