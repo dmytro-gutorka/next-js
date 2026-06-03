@@ -1,11 +1,11 @@
 import type { UseFormRegisterReturn, FieldError } from 'react-hook-form';
-import type { ComponentProps } from 'react';
-import { Input } from 'shared/lib/shadcn/components/ui/input';
 import {
     Field,
     FieldLabel,
     FieldError as FieldErrorMessage,
+    FieldDescription,
 } from 'shared/lib/shadcn/components/ui/field';
+import { Input } from 'shared/lib/shadcn/components/ui/input';
 
 interface CustomTextFieldProps {
     id: string;
@@ -14,16 +14,18 @@ interface CustomTextFieldProps {
     error?: FieldError;
     serverErrors?: string[];
     placeholder?: string;
-    type?: ComponentProps<typeof Input>['type'];
+    description?: string;
+    type?: string;
 }
 
-export function CustomTextField({
+export function CustomTextareaField({
     id,
     label,
     registration,
     error,
     serverErrors,
     placeholder,
+    description,
     type = 'text',
 }: CustomTextFieldProps) {
     const errors = [error, ...(serverErrors?.map((message) => ({ message })) ?? [])];
@@ -32,6 +34,7 @@ export function CustomTextField({
     return (
         <Field data-invalid={isInvalid}>
             <FieldLabel htmlFor={id}>{label}</FieldLabel>
+
             <Input
                 {...registration}
                 id={id}
@@ -40,6 +43,9 @@ export function CustomTextField({
                 aria-invalid={isInvalid}
                 aria-label={label}
             />
+
+            {description && <FieldDescription>{description}</FieldDescription>}
+
             <FieldErrorMessage errors={errors} />
         </Field>
     );

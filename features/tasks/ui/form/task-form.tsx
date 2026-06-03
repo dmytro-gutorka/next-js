@@ -8,6 +8,7 @@ import {
     FieldDescription,
     FieldGroup,
     FieldLabel,
+    FieldError,
 } from '@/shared/lib/shadcn/components/ui/field';
 import { Input } from '@/shared/lib/shadcn/components/ui/input';
 import { Label } from '@/shared/lib/shadcn/components/ui/label';
@@ -23,8 +24,8 @@ import { getTaskFormDefaultValues } from '../../model/task.helpers';
 import { TaskFormSchema } from '../../model/task.schemas';
 import type { Task, TaskFormValues, TaskFormInput } from '../../model/task.types';
 import type { ActionState } from 'features/auth/model/auth.types';
-import { Textarea } from 'shared/lib/shadcn/components/ui/textarea';
 import { Switch } from 'shared/lib/shadcn/components/ui/switch';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 
 export interface TaskFormProps {
     formId: string;
@@ -54,55 +55,25 @@ export function TaskForm({
     return (
         <form id={formId} className="space-y-5" onSubmit={handleSubmit}>
             <FieldGroup>
-                <Field
-                    data-invalid={Boolean(
-                        form.formState.errors.title || actionState.fieldErrors?.title,
-                    )}
-                >
-                    <FieldLabel htmlFor={`${formId}-title`}>Title</FieldLabel>
-                    <Input
-                        aria-label="Title"
-                        id={`${formId}-title`}
-                        placeholder="Enter task title"
-                        aria-invalid={Boolean(
-                            form.formState.errors.title || actionState.fieldErrors?.title,
-                        )}
-                        {...form.register('title')}
-                    />
-                    <FieldDescription>Short and clear task title.</FieldDescription>
-                    <FieldError
-                        message={
-                            form.formState.errors.title?.message ??
-                            actionState.fieldErrors?.title?.[0]
-                        }
-                    />
-                </Field>
+                <CustomTextareaField
+                    id={`${formId}-title`}
+                    label="Title"
+                    placeholder="Enter task title"
+                    registration={form.register('title')}
+                    error={form.formState.errors.title}
+                    serverErrors={actionState.fieldErrors?.title}
+                    description="Short and clear task title."
+                />
 
-                <Field
-                    data-invalid={Boolean(
-                        form.formState.errors.description || actionState.fieldErrors?.description,
-                    )}
-                >
-                    <FieldLabel htmlFor={`${formId}-description`}>Description</FieldLabel>
-                    <Textarea
-                        aria-label="Description"
-                        id={`${formId}-description`}
-                        placeholder="Describe the task"
-                        aria-invalid={Boolean(
-                            form.formState.errors.description ||
-                            actionState.fieldErrors?.description,
-                        )}
-                        {...form.register('description')}
-                    />
-                    <FieldDescription>Add useful context for this task.</FieldDescription>
-                    <FieldError
-                        message={
-                            form.formState.errors.description?.message ??
-                            actionState.fieldErrors?.description?.[0]
-                        }
-                    />
-                </Field>
-
+                <CustomTextareaField
+                    id={`${formId}-description`}
+                    label="Description"
+                    placeholder="Describe the task"
+                    registration={form.register('description')}
+                    error={form.formState.errors.description}
+                    serverErrors={actionState.fieldErrors?.description}
+                    description="Add useful context for this task."
+                />
                 <div className="grid gap-4 md:grid-cols-2">
                     <Controller
                         control={form.control}
@@ -125,11 +96,10 @@ export function TaskForm({
                                     </SelectContent>
                                 </Select>
                                 <FieldDescription>Choose the current task status.</FieldDescription>
-                                <FieldError message={form.formState.errors.status?.message} />
+                                <FieldError errors={[form.formState.errors.status]} />
                             </Field>
                         )}
                     />
-
                     <Controller
                         control={form.control}
                         name="priority"
@@ -149,7 +119,7 @@ export function TaskForm({
                                     </SelectContent>
                                 </Select>
                                 <FieldDescription>Set how important this task is.</FieldDescription>
-                                <FieldError message={form.formState.errors.priority?.message} />
+                                <FieldError errors={[form.formState.errors.priority]} />
                             </Field>
                         )}
                     />
@@ -165,7 +135,7 @@ export function TaskForm({
                         {...form.register('deadline')}
                     />
                     <FieldDescription>Leave empty if there is no deadline.</FieldDescription>
-                    <FieldError message={form.formState.errors.deadline?.message} />
+                    <FieldError errors={[form.formState.errors.deadline]} />
                 </Field>
 
                 <Controller
@@ -193,10 +163,4 @@ export function TaskForm({
             </Button>
         </form>
     );
-}
-
-function FieldError({ message }: { message?: string }) {
-    if (!message) return null;
-
-    return <p className="text-sm text-destructive">{message}</p>;
 }

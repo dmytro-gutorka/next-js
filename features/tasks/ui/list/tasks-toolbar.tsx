@@ -6,14 +6,6 @@ import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import { Input } from '@/shared/lib/shadcn/components/ui/input';
 import { Label } from '@/shared/lib/shadcn/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/shared/lib/shadcn/components/ui/select';
-
-import {
     TASK_PRIORITY_FILTER,
     TASK_SORT_BY_FILTER,
     TASK_STATUS_FILTER,
@@ -24,6 +16,7 @@ import type { TasksQueryState, TaskViewMode } from '../../model/task.types';
 import { CreateTaskDialog } from '../modals/create-task-dialog';
 import { usePathname, useRouter } from 'next/navigation';
 import { buildTasksQueryString } from 'features/tasks/model/task.helpers';
+import { CustomSelect } from 'shared/ui/custom-select';
 
 interface TasksToolbarProps {
     queryState: TasksQueryState;
@@ -79,25 +72,20 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                         />
                     </div>
                     <div className="grid gap-2 sm:w-44">
-                        <Label>Search by</Label>
-                        <Select
+                        <CustomSelect
+                            label="Search By"
                             value={queryState.searchBy}
                             onValueChange={(searchBy) =>
                                 updateQueryState({
                                     searchBy: searchBy as TasksQueryState['searchBy'],
                                 })
                             }
-                        >
-                            <SelectTrigger>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value={TASKS_SEARCH_BY_PARAMS.TITLE}>Title</SelectItem>
-                                <SelectItem value={TASKS_SEARCH_BY_PARAMS.DESCRIPTION}>
-                                    Description
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
+                            options={[
+                                [TASKS_SEARCH_BY_PARAMS.TITLE, 'Title'],
+                                [TASKS_SEARCH_BY_PARAMS.DESCRIPTION, 'Description'],
+
+                            ]}
+                        />
                     </div>
                     <Button type="submit" className="sm:self-end">
                         <Search className="mr-2 size-4" />
@@ -129,7 +117,7 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
             </div>
 
             <div className="grid gap-3 md:grid-cols-4">
-                <FilterSelect
+                <CustomSelect
                     label="Status"
                     value={queryState.status}
                     onValueChange={(status) =>
@@ -142,7 +130,7 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                         [TASK_STATUS_FILTER.DONE, 'Done'],
                     ]}
                 />
-                <FilterSelect
+                <CustomSelect
                     label="Priority"
                     value={queryState.priority}
                     onValueChange={(priority) =>
@@ -155,7 +143,7 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                         [TASK_PRIORITY_FILTER.HIGH, 'High'],
                     ]}
                 />
-                <FilterSelect
+                <CustomSelect
                     label="Sort by"
                     value={queryState.sortBy}
                     onValueChange={(sortBy) =>
@@ -180,33 +168,6 @@ export function TasksToolbar({ queryState, viewMode, onViewModeChange }: TasksTo
                     </Button>
                 </div>
             </div>
-        </div>
-    );
-}
-
-type FilterSelectProps = {
-    label: string;
-    value: string;
-    options: Array<[string, string]>;
-    onValueChange: (value: string) => void;
-};
-
-function FilterSelect({ label, value, options, onValueChange }: FilterSelectProps) {
-    return (
-        <div className="grid gap-2">
-            <Label>{label}</Label>
-            <Select value={value} onValueChange={onValueChange}>
-                <SelectTrigger>
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    {options.map(([optionValue, optionLabel]) => (
-                        <SelectItem key={optionValue} value={optionValue}>
-                            {optionLabel}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
         </div>
     );
 }

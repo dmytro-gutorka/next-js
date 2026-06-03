@@ -9,7 +9,7 @@ import { CardFooter } from 'shared/lib/shadcn/components/ui/card';
 import { FieldGroup } from 'shared/lib/shadcn/components/ui/field';
 import { AuthFormCard } from 'features/auth/ui/common/layout/auth-form-card';
 import { AuthSubmitButton } from 'features/auth/ui/common/buttons/auth-submit-button';
-import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import { loginAction } from 'features/auth/actions/login.action';
 import { initialActionState } from 'shared/lib/server-actions/action-state';
@@ -44,7 +44,7 @@ export function LoginForm() {
         <AuthFormCard title="Sign in" description="Use your email and password to continue.">
             <form id="login-form" onSubmit={handleSubmit} className="space-y-5">
                 <FieldGroup>
-                    <CustomTextField
+                    <CustomTextareaField
                         id="login-email"
                         label="Email"
                         placeholder="name@example.com"
@@ -53,7 +53,7 @@ export function LoginForm() {
                         serverErrors={actionState.fieldErrors?.email}
                     />
 
-                    <CustomTextField
+                    <CustomTextareaField
                         id="login-password"
                         label="Password"
                         placeholder="Enter your password"

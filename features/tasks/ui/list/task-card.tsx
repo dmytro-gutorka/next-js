@@ -1,6 +1,5 @@
 import { Calendar, Lock } from 'lucide-react';
 import Link from 'next/link';
-
 import { AppRoutes } from '@/shared/config/app-routes';
 import {
     Card,

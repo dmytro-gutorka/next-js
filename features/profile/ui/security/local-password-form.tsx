@@ -9,7 +9,7 @@ import { SetLocalPasswordSchema } from '@/features/auth/model/auth.schemas';
 import type { SetLocalPasswordPayload, ActionState } from '@/features/auth/index.types';
 import { Button } from '@/shared/lib/shadcn/components/ui/button';
 import { FieldGroup } from '@/shared/lib/shadcn/components/ui/field';
-import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { SecurityPageAlert } from 'features/profile/ui/security/security-page-alers';
 import { setLocalPasswordAction } from 'features/auth/actions/set-local-password.action';
 
@@ -45,7 +45,7 @@ export function LocalPasswordForm() {
             <SecurityPageAlert message={actionState.message} isSuccess={actionState.success} />
 
             <FieldGroup>
-                <CustomTextField
+                <CustomTextareaField
                     id="password"
                     type="password"
                     label="Password"
@@ -54,7 +54,7 @@ export function LocalPasswordForm() {
                     error={form.formState.errors.password}
                     serverErrors={actionState.fieldErrors?.password}
                 />
-                <CustomTextField
+                <CustomTextareaField
                     id="confirmPassword"
                     type="password"
                     label="Confirm password"

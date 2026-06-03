@@ -1,14 +1,22 @@
-import Link from 'next/link';
+'use client';
 
-import { Button } from '@/shared/lib/shadcn/components/ui/button';
-
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from 'shared/lib/shadcn/components/ui/pagination';
 import type { TasksQueryState } from '../../model/task.types';
+import { getTasksPageHref } from 'features/tasks/model/task.helpers';
 
-type TasksPaginationProps = {
+interface TasksPaginationProps {
     queryState: TasksQueryState;
     page: number;
     totalPages: number;
-};
+}
 
 export function TasksPagination({ queryState, page, totalPages }: TasksPaginationProps) {
     if (totalPages <= 1) return null;
@@ -16,32 +24,58 @@ export function TasksPagination({ queryState, page, totalPages }: TasksPaginatio
     const canGoPrevious = page > 1;
     const canGoNext = page < totalPages;
 
+    const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+    const visiblePages = pages.filter((pageNumber) => {
+        return pageNumber === 1 || pageNumber === totalPages || Math.abs(pageNumber - page) <= 1;
+    });
+
     return (
-        <nav className="flex items-center justify-center gap-2 pt-4" aria-label="Tasks pagination">
-            <Button asChild variant="outline" disabled={!canGoPrevious}>
-                <Link href={buildTasksHref(queryState, page - 1)} aria-disabled={!canGoPrevious}>
-                    Previous
-                </Link>
-            </Button>
+        <Pagination className="mt-6">
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious
+                        href={canGoPrevious ? getTasksPageHref(queryState, page - 1) : '#'}
+                        aria-disabled={!canGoPrevious}
+                        className={!canGoPrevious ? 'pointer-events-none opacity-50' : undefined}
+                    />
+                </PaginationItem>
 
-            <span className="px-3 text-sm text-muted-foreground">
-                Page {page} of {totalPages}
-            </span>
+                {visiblePages.map((pageNumber, index) => {
+                    const previousPage = visiblePages[index - 1];
+                    const shouldShowEllipsis =
+                        previousPage !== undefined && pageNumber - previousPage > 1;
 
-            <Button asChild variant="outline" disabled={!canGoNext}>
-                <Link href={buildTasksHref(queryState, page + 1)} aria-disabled={!canGoNext}>
-                    Next
-                </Link>
-            </Button>
-        </nav>
+                    return (
+                        <div key={pageNumber} className="flex items-center">
+                            {shouldShowEllipsis && (
+                                <PaginationItem>
+                                    <PaginationEllipsis />
+                                </PaginationItem>
+                            )}
+
+                            <PaginationItem>
+                                <PaginationLink
+                                    href={getTasksPageHref(queryState, pageNumber)}
+                                    isActive={pageNumber === page}
+                                    aria-current={pageNumber === page ? 'page' : undefined}
+                                >
+                                    {pageNumber}
+                                </PaginationLink>
+                            </PaginationItem>
+                        </div>
+                    );
+                })}
+
+                <PaginationItem>
+                    <PaginationNext
+                        href={canGoNext ? getTasksPageHref(queryState, page + 1) : '#'}
+                        aria-disabled={!canGoNext}
+                        className={!canGoNext ? 'pointer-events-none opacity-50' : undefined}
+                    />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
     );
 }
 
-function buildTasksHref(queryState: TasksQueryState, page: number) {
-    const searchParams = new URLSearchParams({
-        ...queryState,
-        page: String(page),
-    });
-
-    return `/tasks?${searchParams.toString()}`;
-}

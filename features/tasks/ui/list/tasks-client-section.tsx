@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react';
 import { TASK_VIEW_MODE } from '../../model/task.constants';
 import type { Task, TasksQueryState, TaskViewMode } from '../../model/task.types';

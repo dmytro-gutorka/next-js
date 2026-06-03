@@ -6,7 +6,7 @@ import { ResetPasswordFormSchema } from 'features/auth/model/auth.schemas';
 import { KeyRound } from 'lucide-react';
 import { ResetPasswordCardWrapper } from 'features/auth/ui/common/layout/reset-password-card-wrapper';
 import { ResetPasswordSuccessState } from 'features/auth/ui/common/states/reset-password-success-state';
-import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import { FieldGroup } from '@/shared/lib/shadcn/components/ui/field';
 import { Button } from 'shared/lib/shadcn/components/ui/button';
@@ -57,7 +57,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         >
             <form onSubmit={handleSubmit} className="space-y-4">
                 <FieldGroup>
-                    <CustomTextField
+                    <CustomTextareaField
                         id="reset-new-password"
                         label="New password"
                         type="password"
@@ -67,7 +67,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                         serverErrors={actionState.fieldErrors?.newPassword}
                     />
 
-                    <CustomTextField
+                    <CustomTextareaField
                         id="reset-confirm-password"
                         label="Confirm password"
                         type="password"

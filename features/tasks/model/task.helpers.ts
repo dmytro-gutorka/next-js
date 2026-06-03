@@ -6,16 +6,12 @@ import {
     TASK_PRIORITY,
     TASK_STATUS,
 } from './task.constants';
-import type {
-    TasksPageSearchParams,
-    TasksQueryState,
-    Task,
-    TaskFormInput,
-} from './task.types';
+import type { TasksPageSearchParams, TasksQueryState, Task, TaskFormInput } from './task.types';
 import {
     normalizeEnumParam,
     normalizeStringParam,
 } from 'shared/lib/common/helpers/normalizers.helpers';
+import { AppRoutes } from 'shared/config/app-routes';
 
 export function normalizeTasksSearchParams(searchParams: TasksPageSearchParams): TasksQueryState {
     return {
@@ -83,4 +79,14 @@ export function buildTasksQueryString(
     });
 
     return params.toString();
+}
+
+export function getTasksPageHref(queryState: TasksQueryState, page: number) {
+    const searchParams = new URLSearchParams();
+
+    Object.entries({ ...queryState, page: String(page) }).forEach(([key, value]) => {
+        if (value) searchParams.set(key, value);
+    });
+
+    return `${AppRoutes.tasks}?${searchParams.toString()}`;
 }

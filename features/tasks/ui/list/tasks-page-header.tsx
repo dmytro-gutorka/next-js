@@ -1,7 +1,6 @@
 import { ClipboardList } from 'lucide-react';
 import type { TasksQueryState } from '../../model/task.types';
 import { Card, CardHeader, CardTitle, CardDescription } from 'shared/lib/shadcn/components/ui/card';
-import { Badge } from 'shared/lib/shadcn/components/ui/badge';
 
 interface TasksPageHeaderProps {
     total: number;
@@ -25,8 +24,6 @@ export function TasksPageHeader({ total, queryState }: TasksPageHeaderProps) {
                         {hasSearch ? ` for “${queryState.search}”` : ''}.
                     </CardDescription>
                 </div>
-
-                <Badge variant="secondary">Read-only migration step</Badge>
             </CardHeader>
         </Card>
     );

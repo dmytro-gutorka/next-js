@@ -14,7 +14,7 @@ import type {
     ActionState,
     SignInLocalPayload,
 } from 'features/auth/model/auth.types';
-import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import { initialActionState } from 'shared/lib/server-actions/action-state';
 
@@ -49,7 +49,7 @@ export function RegistrationForm() {
         <AuthFormCard title="Create account" description="You could manage your tasks anywhere.">
             <form id="registration-form" onSubmit={handleSubmit} className="space-y-5">
                 <FieldGroup>
-                    <CustomTextField
+                    <CustomTextareaField
                         id="registration-email"
                         label="Email"
                         placeholder="name@example.com"
@@ -58,7 +58,7 @@ export function RegistrationForm() {
                         serverErrors={actionState.fieldErrors?.email}
                     />
 
-                    <CustomTextField
+                    <CustomTextareaField
                         id="registration-password"
                         label="Password"
                         placeholder="Create a password"
@@ -68,7 +68,7 @@ export function RegistrationForm() {
                         serverErrors={actionState.fieldErrors?.password}
                     />
 
-                    <CustomTextField
+                    <CustomTextareaField
                         id="registration-confirm-password"
                         label="Confirm password"
                         placeholder="Repeat your password"

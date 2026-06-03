@@ -23,7 +23,7 @@ import { ProfileFormSchema } from '../../model/profile.schemas';
 import type { ProfileFormValues, ProfileActionState } from '../../model/profile.types';
 import { ProfileCompletenessCard } from './profile-completeness-card';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
-import { CustomTextField } from 'shared/ui/custom-text-field';
+import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 
 const initialProfileActionState: ProfileActionState = {
     success: false,
@@ -86,7 +86,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
                     <form className="space-y-5" onSubmit={handleSubmit}>
                         <FieldGroup>
-                            <CustomTextField
+                            <CustomTextareaField
                                 id="name"
                                 label="Name"
                                 placeholder="Enter your name"
@@ -94,7 +94,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 error={form.formState.errors.name}
                                 serverErrors={actionState.fieldErrors?.name}
                             />
-                            <CustomTextField
+                            <CustomTextareaField
                                 id="surname"
                                 label="Surname"
                                 placeholder="Enter your surname"
@@ -102,7 +102,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                 error={form.formState.errors.surname}
                                 serverErrors={actionState.fieldErrors?.surname}
                             />
-                            <CustomTextField
+                            <CustomTextareaField
                                 id="birthday"
                                 type="date"
                                 label="Birthday"
