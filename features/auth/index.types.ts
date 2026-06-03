@@ -1,11 +1,12 @@
 export type {
-    AuthActionState,
+    ActionState,
     AuthProvider,
     ConfirmPasswordResetPayload,
     CurrentUser,
     MessageResponse,
     PrimaryEmailOption,
     PrimaryEmailOptionsResponse,
+    ResetPasswordFormValues,
     SessionTokens,
     SetLocalPasswordPayload,
     SignInGooglePayload,

@@ -16,9 +16,13 @@ export const SignUpFormSchema = z
         path: ['confirmPassword'],
     });
 
-export const ConfirmPasswordResetSchema = z
+export const SignUpLocalSchema = SignUpFormSchema.transform(({ email, password }) => ({
+    email,
+    password,
+}));
+
+export const ResetPasswordFormSchema = z
     .strictObject({
-        token: z.string().min(1, 'Reset token is required'),
         newPassword: z.string().min(6, 'Min password length is 6'),
         confirmPassword: z.string().min(6, 'Min password length is 6'),
     })
@@ -26,6 +30,12 @@ export const ConfirmPasswordResetSchema = z
         message: 'Passwords do not match',
         path: ['confirmPassword'],
     });
+
+export const ConfirmPasswordResetSchema = ResetPasswordFormSchema.and(
+    z.strictObject({
+        token: z.string().min(1, 'Reset token is required'),
+    }),
+);
 
 export const SignInGoogleSchema = z.strictObject({
     credential: z.string().min(1, 'Google credential is required'),

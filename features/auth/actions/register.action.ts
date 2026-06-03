@@ -3,31 +3,23 @@
 import { redirect } from 'next/navigation';
 import { AppRoutes } from 'shared/config/app-routes';
 import { SignUpFormSchema } from '../model/auth.schemas';
-import type { AuthActionState } from '../model/auth.types';
+import type { ActionState, SignUpLocalPayload } from '../model/auth.types';
 import { signUpLocal } from '../server/auth-api';
 import { setSessionCookies } from '../server/session-cookies';
 import {
     createErrorActionState,
     createValidationActionState,
-    getStringFormValue,
-} from './action-state';
+} from 'shared/lib/server-actions/action-state';
 
-export async function registerAction(
-    _previousState: AuthActionState,
-    formData: FormData,
-): Promise<AuthActionState> {
-    const payload = SignUpFormSchema.safeParse({
-        email: getStringFormValue(formData, 'email'),
-        password: getStringFormValue(formData, 'password'),
-        confirmPassword: getStringFormValue(formData, 'confirmPassword'),
-    });
+export async function registerAction(payload: SignUpLocalPayload): Promise<ActionState> {
+    const parsedPayload = SignUpFormSchema.safeParse(payload);
 
-    if (!payload.success) return createValidationActionState(payload);
+    if (!parsedPayload.success) return createValidationActionState(parsedPayload);
 
     try {
         const tokens = await signUpLocal({
-            email: payload.data.email,
-            password: payload.data.password,
+            email: parsedPayload.data.email,
+            password: parsedPayload.data.password,
         });
         await setSessionCookies(tokens);
     } catch (error) {

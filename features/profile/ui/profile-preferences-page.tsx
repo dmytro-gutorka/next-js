@@ -1,7 +1,22 @@
-export async function ProfilePreferencesPage() {
+import {
+    CardContent,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from 'shared/lib/shadcn/components/ui/card';
+
+export function ProfilePreferencesPage() {
     return (
-        <section>
-            <h2>Profile Preferences</h2>
-        </section>
+        <Card>
+            <CardHeader>
+                <CardTitle>Preferences</CardTitle>
+                <CardDescription>Application preferences will be available here.</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+                <CardDescription>There are no configurable preferences yet.</CardDescription>
+            </CardContent>
+        </Card>
     );
 }

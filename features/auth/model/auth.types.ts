@@ -7,9 +7,11 @@ import {
     SetLocalPasswordSchema,
     UpdatePrimaryEmailSchema,
     SignUpFormSchema,
+    SignUpLocalSchema,
+    ResetPasswordFormSchema,
 } from 'features/auth/model/auth.schemas';
 
-export type AuthActionState = {
+export type ActionState = {
     success: boolean;
     message?: string;
     fieldErrors?: Record<string, string[]>;
@@ -58,9 +60,10 @@ export type UpdatePrimaryEmailResponse = {
 };
 
 export type SignInLocalPayload = z.infer<typeof SignInLocalSchema>;
+export type SignUpLocalPayload = z.infer<typeof SignUpLocalSchema>;
 export type SignUpFormValues = z.input<typeof SignUpFormSchema>;
-export type SignUpLocalPayload = z.infer<typeof SignInLocalSchema>;
 export type ConfirmPasswordResetPayload = z.infer<typeof ConfirmPasswordResetSchema>;
 export type SignInGooglePayload = z.infer<typeof SignInGoogleSchema>;
 export type SetLocalPasswordPayload = z.infer<typeof SetLocalPasswordSchema>;
 export type UpdatePrimaryEmailPayload = z.infer<typeof UpdatePrimaryEmailSchema>;
+export type ResetPasswordFormValues = z.infer<typeof ResetPasswordFormSchema>;

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ProfileLayout } from 'features/profile/ui/profile-layout';
+import { ProfileLayout } from 'features/profile/ui/common/profile-layout';
 
 interface ProfileRouteLayoutProps {
     children: ReactNode;
