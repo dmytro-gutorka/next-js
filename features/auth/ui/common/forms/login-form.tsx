@@ -11,8 +11,8 @@ import { AuthFormCard } from 'features/auth/ui/common/layout/auth-form-card';
 import { AuthSubmitButton } from 'features/auth/ui/common/buttons/auth-submit-button';
 import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
-import { loginAction } from 'features/auth/actions/login.action';
 import { initialActionState } from 'shared/lib/server-actions/action-state';
+import { loginAction } from 'features/auth/actions/login.action';
 
 const loginFormDefaultValues: SignInLocalPayload = {
     email: '',

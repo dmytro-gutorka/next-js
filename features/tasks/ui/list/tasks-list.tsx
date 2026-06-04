@@ -48,7 +48,6 @@ export function TasksList({
 
     if (!tasks.length && !errorMessage) return <TasksEmptyState />;
 
-
     return (
         <div className="space-y-3">
             {tasks.map((task) => (
@@ -98,5 +97,3 @@ export function TasksList({
         </div>
     );
 }
-
-

@@ -40,9 +40,10 @@ export function GoogleAuthButton({
     if (!googleClientId) return null;
 
     return (
-        <div className="space-y-3">
+        <div>
             <GoogleLogin
-                shape="square"
+                shape="pill"
+                theme="filled_black"
                 text={text}
                 width="100%"
                 onSuccess={handleSuccess}
