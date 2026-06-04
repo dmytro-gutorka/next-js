@@ -19,6 +19,7 @@ export type ActionState = {
 
 export type SessionTokens = {
     accessToken: string;
+    refreshToken: string;
 };
 
 export type TokenResponse = {

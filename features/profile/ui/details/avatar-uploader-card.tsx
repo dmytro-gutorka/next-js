@@ -19,10 +19,16 @@ import { uploadAvatarAction } from '../../actions/upload-avatar.action';
 import { getUserInitials } from '../../model/profile.helpers';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import type { ActionState } from 'features/auth/model/auth.types';
+import { getCroppedImageFile } from 'features/profile/lib/crop-image';
+import type { Area } from 'react-easy-crop';
+import { AvatarCropModal } from 'features/profile/ui/details/avatar-crop-modal';
 
 interface AvatarUploaderCardProps {
     user: User;
 }
+
+const DEFAULT_CROP = { x: 0, y: 0 };
+const DEFAULT_ZOOM = 1;
 
 export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -30,9 +36,13 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
     const [isPending, setIsPending] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+    const [crop, setCrop] = useState(DEFAULT_CROP);
+    const [zoom, setZoom] = useState(DEFAULT_ZOOM);
+    const [croppedArea, setCroppedArea] = useState<Area | null>(null);
 
     const avatarUrl = previewUrl ?? user.avatarUrl;
-    const canSubmit = Boolean(selectedFile) && !isPending;
+    const canSubmit = Boolean(selectedFile && croppedArea) && !isPending;
 
     useEffect(() => {
         return () => {
@@ -45,16 +55,26 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
 
         setSelectedFile(file);
         setActionState(initialActionState);
+        setCrop(DEFAULT_CROP);
+        setZoom(DEFAULT_ZOOM);
+        setCroppedArea(null);
 
         setPreviewUrl((currentPreviewUrl) => {
             if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
 
             return file ? URL.createObjectURL(file) : null;
         });
+
+        setIsCropModalOpen(Boolean(file));
     }
 
     function clearSelection() {
         setSelectedFile(null);
+        setCroppedArea(null);
+        setCrop(DEFAULT_CROP);
+        setZoom(DEFAULT_ZOOM);
+        setIsCropModalOpen(false);
+
         setPreviewUrl((currentPreviewUrl) => {
             if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
 
@@ -65,19 +85,33 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
     }
 
     async function handleSubmit() {
-        if (!selectedFile) return;
-
-        const formData = new FormData();
-        formData.set('avatar', selectedFile);
+        if (!selectedFile || !previewUrl || !croppedArea) return;
 
         setIsPending(true);
 
         try {
+            const croppedFile = await getCroppedImageFile(
+                previewUrl,
+                croppedArea,
+                selectedFile.name,
+                selectedFile.type,
+            );
+            const formData = new FormData();
+            formData.set('avatar', croppedFile);
+
             const result = await uploadAvatarAction(formData);
 
             setActionState(result);
 
             if (result.success) clearSelection();
+        } catch {
+            setActionState({
+                success: false,
+                message: 'Failed to crop avatar image.',
+                fieldErrors: {
+                    avatar: ['Failed to crop avatar image.'],
+                },
+            });
         } finally {
             setIsPending(false);
         }
@@ -92,7 +126,7 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
         <Card>
             <CardHeader>
                 <CardTitle>Avatar</CardTitle>
-                <CardDescription>Upload a profile image for your account.</CardDescription>
+                <CardDescription>Upload and crop a profile image for your account.</CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-4">
@@ -134,6 +168,16 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
                         ))}
 
                         <div className="flex flex-col gap-2 md:flex-row">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                disabled={!selectedFile || isPending}
+                                onClick={() => setIsCropModalOpen(true)}
+                            >
+                                <Camera className="mr-2 size-4" />
+                                Crop image
+                            </Button>
+
                             <Button type="button" disabled={!canSubmit} onClick={handleSubmit}>
                                 {isPending ? (
                                     <Loader2 className="mr-2 size-4 animate-spin" />
@@ -149,12 +193,24 @@ export function AvatarUploaderCard({ user }: AvatarUploaderCardProps) {
                                 disabled={!selectedFile || isPending}
                                 onClick={handleCancel}
                             >
-                                <Camera className="mr-2 size-4" />
                                 Cancel selection
                             </Button>
                         </div>
                     </div>
                 </div>
+
+                <AvatarCropModal
+                    open={isCropModalOpen}
+                    imageSrc={previewUrl}
+                    isPending={isPending}
+                    onOpenChange={setIsCropModalOpen}
+                    onCropComplete={setCroppedArea}
+                    onSubmit={handleSubmit}
+                    zoom={zoom}
+                    onZoomChange={setZoom}
+                    crop={crop}
+                    onCropChange={setCrop}
+                />
             </CardContent>
         </Card>
     );

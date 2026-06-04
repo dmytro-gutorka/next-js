@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
-import AppHeader from 'app/(routes)/_components/app-header';
+import { AppHeader } from 'app/_components/app-header';
 
-interface MainLayout {
+interface MainLayoutProps {
     children: ReactNode;
 }
 
-function MainLayout({ children }: MainLayout) {
+export default function MainLayout({ children }: MainLayoutProps) {
     return (
         <>
             <AppHeader />
@@ -13,5 +13,3 @@ function MainLayout({ children }: MainLayout) {
         </>
     );
 }
-
-export default MainLayout;

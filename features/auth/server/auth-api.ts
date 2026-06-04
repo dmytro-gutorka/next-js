@@ -16,29 +16,24 @@ import type {
     UpdatePrimaryEmailResponse,
 } from '../model/auth.types';
 import { getAuthHeaders } from 'shared/lib/common/helpers/getAuthHeaders';
+import { getSessionTokensFromBackendResponse } from 'features/auth/server/backend-auth-session';
 
 export async function signInLocal(payload: SignInLocalPayload): Promise<SessionTokens> {
     const response = await serverHttpClient.post<TokenResponse>('/auth/sign-in', payload);
 
-    return {
-        accessToken: response.data.accessToken,
-    };
+    return getSessionTokensFromBackendResponse(response.data, response.headers['set-cookie']);
 }
 
 export async function signUpLocal(payload: SignUpLocalPayload): Promise<SessionTokens> {
     const response = await serverHttpClient.post<TokenResponse>('/auth/sign-up', payload);
 
-    return {
-        accessToken: response.data.accessToken,
-    };
+    return getSessionTokensFromBackendResponse(response.data, response.headers['set-cookie']);
 }
 
 export async function signInGoogle(payload: SignInGooglePayload): Promise<SessionTokens> {
     const response = await serverHttpClient.post<TokenResponse>('/auth/google', payload);
 
-    return {
-        accessToken: response.data.accessToken,
-    };
+    return getSessionTokensFromBackendResponse(response.data, response.headers['set-cookie']);
 }
 
 export async function getCurrentUser(accessToken: string): Promise<CurrentUser> {

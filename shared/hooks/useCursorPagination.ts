@@ -7,7 +7,11 @@ import {
     useState,
 } from 'react';
 
-import type { CursorPaginationResponse, CursorParam, CursorParams } from '@/shared/types/common.types';
+import type {
+    CursorPaginationResponse,
+    CursorParam,
+    CursorParams,
+} from '@/shared/types/common.types';
 
 export function useCursorPagination<
     RequestData,

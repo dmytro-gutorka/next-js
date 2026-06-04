@@ -3,20 +3,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { registerAction } from 'features/auth/index.actions';
 import { CardFooter } from 'shared/lib/shadcn/components/ui/card';
 import { FieldGroup } from 'shared/lib/shadcn/components/ui/field';
 import { SignUpFormSchema } from 'features/auth/model/auth.schemas';
 import { AuthFormCard } from 'features/auth/ui/common/layout/auth-form-card';
 import { AuthSubmitButton } from 'features/auth/ui/common/buttons/auth-submit-button';
-import type {
-    SignUpFormValues,
-    ActionState,
-    SignInLocalPayload,
-} from 'features/auth/model/auth.types';
+import type { SignUpFormValues, ActionState } from 'features/auth/model/auth.types';
 import { CustomTextareaField } from 'shared/ui/custom-textarea-field';
 import { CustomActionAlert } from 'shared/ui/custom-action-alert';
 import { initialActionState } from 'shared/lib/server-actions/action-state';
+import { registerAction } from 'features/auth/actions/register.action';
 
 const registrationFormDefaultValues: SignUpFormValues = {
     email: '',
@@ -33,7 +29,7 @@ export function RegistrationForm() {
         defaultValues: registrationFormDefaultValues,
     });
 
-    const handleSubmit = form.handleSubmit(async (values: SignInLocalPayload) => {
+    const handleSubmit = form.handleSubmit(async (values: SignUpFormValues) => {
         setIsPending(true);
 
         try {

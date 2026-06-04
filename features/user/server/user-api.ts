@@ -28,9 +28,11 @@ export async function updateMe(accessToken: string, payload: UpdateMePayload) {
 }
 
 export async function uploadAvatar(accessToken: string, formData: FormData) {
+    console.log('formData', formData);
     const response = await serverHttpClient.post<UserDto>('/users/me/avatar', formData, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'multipart/form-data',
         },
     });
 

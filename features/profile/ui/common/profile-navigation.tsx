@@ -2,9 +2,9 @@
 
 import { UserRound } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { AppRoutes } from '@/shared/config/app-routes';
 import { cn } from '@/shared/lib/shadcn/utils/utils';
+import { usePathname } from 'shared/lib/i18n/i18n.navigation';
 
 const tabs = [
     {
